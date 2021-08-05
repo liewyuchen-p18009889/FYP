@@ -7,7 +7,7 @@
     <!-- Style CSS -->
     <!-- <link rel="stylesheet" href="/FYP/signInStyle.css"> -->
 
-    <title>UTask | Project Listttt</title>
+    <title>UTask | Project List</title>
 </head>
 
 <body>
