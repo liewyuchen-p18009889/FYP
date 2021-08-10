@@ -73,7 +73,7 @@
 
                 <div class="mt-4">
                     <div class="d-flex justify-content-center links" style="color: #17252A;">
-                        Don't have an account? <a href="/FYP/signUp.php" class="ml-2" style="color: #3AAFA9;">Sign Up</a>
+                        Don't have an account? <a href="/FYP/signUp.php" class="ml-2" style="color: #3AAFA9;"><b>Sign Up</b></a>
                     </div>
                     <!-- <div class="d-flex justify-content-center links">
                         <a href="#" style="color: #3AAFA9;">Forgot your password?</a>
