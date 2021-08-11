@@ -27,7 +27,12 @@
     // require('import.html');
     include 'connectDB.php';
 
-    $errorsArr = array();
+    //redirect to projectList.php if already sign in
+    if(isset($_SESSION['user_id']) && isset($_SESSION['user_email'])){
+        header("Location: /FYP/projectList.php");
+    }
+
+    $signUpErrorsArr = array();
 
     if(isset($_POST['submittedSignUp'])){
         //validate function
@@ -49,21 +54,21 @@
         
         //to ensure form fields are filled properly
         if(empty($name)){
-            array_push($errorsArr, "Name is required! Please try again!");
+            array_push($signUpErrorsArr, "Name is required! Please try again!");
         }else if(empty($email)){
-            array_push($errorsArr, "Email is required! Please try again!");
+            array_push($signUpErrorsArr, "Email is required! Please try again!");
         }else if(empty($password)){
-            array_push($errorsArr, "Password is required! Please try again!");
+            array_push($signUpErrorsArr, "Password is required! Please try again!");
         }else if(empty($cPassword)){
-            array_push($errorsArr, "Confirm Password is required! Please try again!");
+            array_push($signUpErrorsArr, "Confirm Password is required! Please try again!");
         }else if($password !== $cPassword){
-            array_push($errorsArr, "The confirmation password does not match! Please try again!");
+            array_push($signUpErrorsArr, "The confirmation password does not match! Please try again!");
         }else if(mysqli_num_rows($runQuery1) > 0){
-            array_push($errorsArr, "The email already exists! Please try again!");
+            array_push($signUpErrorsArr, "This email already exists! Please try again!");
         }
 
         //no errors
-		if(count($errorsArr) == 0){
+		if(count($signUpErrorsArr) == 0){
             $password = md5($password); //to calculate MD5 hash of a string for data security
             $query2 = "INSERT INTO users(user_name, user_email, user_password) VALUES('$name', '$email', '$password')";
             $runQuery2 = mysqli_query($dbc, $query2);
@@ -75,7 +80,7 @@
                 echo '<script type="text/javascript">swalFunc();</script>';
                 // header('Location: /FYP/projectList.php');
             }else{
-                array_push($errorsArr, "Unknown error occurred!");
+                array_push($signUpErrorsArr, "Unknown error occurred!");
             }              
 		}
     }
@@ -91,10 +96,10 @@
                         <div class="d-flex justify-content-center">
                             <h3 class="mb-4" style="color: #3AAFA9;">Create Account</h3>
                         </div>
-                        <?php if(count($errorsArr) > 0){?>
+                        <?php if(count($signUpErrorsArr) > 0){?>
                         <div class="form-group">
                             <?php
-                                    foreach($errorsArr as $errorMsg){
+                                    foreach($signUpErrorsArr as $errorMsg){
                                         echo "<div class=\"alert alert-danger pt-1 pb-1\" role=\"alert\">".$errorMsg."</div>";
                                     }
                                 ?>

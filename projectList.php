@@ -24,11 +24,27 @@
             <div class="col-6">
                 <h3 style="color: #3AAFA9;">Projects</h3>
             </div>
+            <?php
+                $email = $_SESSION['user_email'];
+                $query1 = "SELECT * FROM users WHERE user_email='$email' AND isProjectManager='1'";
+                $runQuery1 = mysqli_query($dbc, $query1);
+
+                if(mysqli_num_rows($runQuery1) === 1){
+                    $row = mysqli_fetch_assoc($runQuery1); //to fetch a result row as an associative array
+            ?>
             <div class="col-6 d-flex justify-content-end">
                 <button class="btn btn-primary" type="button" style="background: #3AAFA9;" data-toggle="modal"
                     data-target="#addProjectModal"><i class="fas fa-plus" style="font-size: 20px;"></i>&nbsp;Create
                     Project</button>
             </div>
+            <?php }else{ ?>
+                <div class="col-6 d-flex justify-content-end"></div>
+            <?php }  ?>
+            <!-- <div class="col-6 d-flex justify-content-end">
+                <button class="btn btn-primary" type="button" style="background: #3AAFA9;" data-toggle="modal"
+                    data-target="#addProjectModal"><i class="fas fa-plus" style="font-size: 20px;"></i>&nbsp;Create
+                    Project</button>
+            </div> -->
         </div>
     </div>
     <!--add project modal START-->
@@ -40,8 +56,8 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Create New Project</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-								<span aria-hidden="true">&times;</span>
-							</button>
+                        <span aria-hidden="true">&times;</span>
+                    </button>
                 </div>
                 <form action="#" method="post" enctype="multipart/form-data">
                     <div class="modal-body">
@@ -573,6 +589,8 @@
             </table>
         </div>
     </div>
+    <!--using external files-->
+		<?php require('footer.html'); ?>
 </body>
 
 </html>
