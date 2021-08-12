@@ -3,7 +3,12 @@
 
 <head>
     <!--using external files-->
-    <?php require('import.html') ?>
+    <?php 
+        ob_start(); //to solve errors of "Cannot modify header information - headers already sent"
+        session_start();
+        include 'import.html';
+        include 'connectDB.php';        
+    ?>
     <!-- Sign In Style CSS -->
     <link rel="stylesheet" href="/FYP/signInStyle1.css">
 
@@ -11,12 +16,12 @@
 
     <!-- show sweet alert then proceed to projectList.php START -->
     <script type="text/javascript">
-        function swalFunc(){
+        function swalFunc() {
             $(function () {
                 swal("Sign in successfully!", "Let's start to work on your projects!", "success")
-                .then(function () {
-                    window.location = "/FYP/projectList.php";
-                });
+                    .then(function () {
+                        window.location = "/FYP/projectList.php";
+                    });
             });
         }
     </script>
@@ -24,9 +29,6 @@
 </head>
 
 <?php
-    session_start();
-    include 'connectDB.php';
-
     //redirect to projectList.php if already sign in
     if(isset($_SESSION['user_id']) && isset($_SESSION['user_email'])){
         header("Location: /FYP/projectList.php");
@@ -37,7 +39,7 @@
     if(isset($_POST['submittedSignIn'])){
         //validate function
         function validate($data){
-            $date = trim($data);                //to remove whitespace and other predefined characters from both sides of a string.
+            $data = trim($data);                //to remove whitespace and other predefined characters from both sides of a string.
             $data = stripslashes($data);        //to remove backslashes
 	        $data = htmlspecialchars($data);    //to convert some predefined characters to HTML entities
 
@@ -96,7 +98,8 @@
                         <div class="form-group">
                             <!-- <label for="exampleInputEmail1">Email address</label> -->
                             <input type="email" class="form-control" name="signInEmail" id="exampleInputEmail1"
-                                aria-describedby="emailHelp" placeholder="Email address" style="background: #e6e6e6;" value="<?php if(!empty($email)){echo $email;} ?>">
+                                aria-describedby="emailHelp" placeholder="Email address" style="background: #e6e6e6;"
+                                value="<?php if(!empty($email)){echo $email;} ?>">
                             <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone
                                 else.</small> -->
                         </div>

@@ -2,7 +2,12 @@
 <html lang="en">
 <head>
     <!--using external files-->
-    <?php require('import.html') ?>
+    <?php 
+        ob_start(); //to solve errors of "Cannot modify header information - headers already sent"
+        session_start();
+        include 'import.html';
+        include 'connectDB.php';
+     ?>
     <!-- Sign Up Style CSS -->
     <link rel="stylesheet" type="text/css" href="/FYP/signUpStyle.css">
 
@@ -23,10 +28,6 @@
 </head>
 
 <?php
-    session_start();
-    // require('import.html');
-    include 'connectDB.php';
-
     //redirect to projectList.php if already sign in
     if(isset($_SESSION['user_id']) && isset($_SESSION['user_email'])){
         header("Location: /FYP/projectList.php");
@@ -37,7 +38,7 @@
     if(isset($_POST['submittedSignUp'])){
         //validate function
         function validate($data){
-            $date = trim($data);                //to remove whitespace and other predefined characters from both sides of a string.
+            $data = trim($data);                //to remove whitespace and other predefined characters from both sides of a string.
             $data = stripslashes($data);        //to remove backslashes
 	        $data = htmlspecialchars($data);    //to convert some predefined characters to HTML entities
 
