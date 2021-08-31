@@ -2,14 +2,12 @@
 	include 'connectDB.php';
 ?>
 <div class="container-fluid bg-info" id="header">
-	<div class="row">
-		<div class="col-3"></div>
-		<div class="col-6">
-			<a href="#">
-				<h1 style="text-align: center; color: #feffff; margin: 20px 0;">UTask</h1>
-			</a>
+	<div class="row justify-content-around">
+		<div class="col-4">
+			<a href="#"><h1 style="text-align: center; color: #feffff; margin: 20px 0;">UTask</h1></a>
 		</div>
-		<div class="col-3 d-flex justify-content-center align-items-center">
+		<div class="col-4"></div>
+		<div class="col-4 d-flex justify-content-center align-items-center">
 			<?php if(isset($_SESSION['user_id']) && isset($_SESSION['user_email'])){ ?>
 			<div class="dropdown">
 				<a class="btn btn-outline-light dropdown-toggle" href="#" role="button" id="dropdownMenuLink"

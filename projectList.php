@@ -176,7 +176,7 @@
             </div>
             <!-- project datatable END -->
             <!--using external files-->
-            <?php require('footer.html'); ?>
+            <?php include 'footer.html'; ?>
 </body>
 
 </html>
