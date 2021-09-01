@@ -16,7 +16,6 @@
         .scrollBar {
             display: flex;
             overflow-x: auto;
-
         }
 
         .fixWidth {
@@ -26,7 +25,7 @@
     </style>
     <script>
         $(function () {
-            $("#drag1, #drag2, #drag3").sortable({
+            $("#drag1, #drag2, #drag3, #drag4").sortable({
                 connectWith: ".connectedSortable"
             }).disableSelection();
         });
@@ -70,9 +69,9 @@
     <div class="container-fluid mb-3">
         <div class="scrollBar" style="margin: 0 3px; min-height: 600px;">
             <!-- 1st column START -->
-            <div class="col fixWidth bg-white shadow rounded mr-2 ml-2 p-0 d-flex justify-content-center">
+            <div class="col fixWidth bg-white shadow rounded mr-2 ml-2 p-0 d-flex justify-content-center border border-info">
                 <div class="container connectedSortable" id="drag1">
-                    <h5 class="d-flex justify-content-center text-info  mt-3">column 1</h5>
+                    <h5 class="d-flex justify-content-center text-info  mt-3">TO DO</h5>
                     <div class="card bg-light mt-3">
                         <div class="card-body">
                             <h5 class="card-title">Card title1</h5>
@@ -93,9 +92,9 @@
             </div>
             <!-- 1st column END -->
             <!-- 2nd column START -->
-            <div class="col fixWidth bg-white shadow rounded mr-2 ml-2 p-0 d-flex justify-content-center">
+            <div class="col fixWidth bg-white shadow rounded mr-2 ml-2 p-0 d-flex justify-content-center border border-info">
                 <div class="container connectedSortable" id="drag2">
-                    <h5 class="d-flex justify-content-center text-info  mt-3">column 2</h5>
+                    <h5 class="d-flex justify-content-center text-info  mt-3">IN PROGRESS</h5>
                     <div class="card bg-light mt-3">
                         <div class="card-body">
                             <h5 class="card-title">Card title3</h5>
@@ -116,9 +115,9 @@
             </div>
             <!-- 2nd column END -->
             <!-- 3rd column START -->
-            <div class="col fixWidth bg-white shadow rounded mr-2 ml-2 p-0 d-flex justify-content-center">
+            <div class="col fixWidth bg-white shadow rounded mr-2 ml-2 p-0 d-flex justify-content-center border border-info">
                 <div class="container connectedSortable" id="drag3">
-                    <h5 class="d-flex justify-content-center text-info  mt-3">column 3</h5>
+                    <h5 class="d-flex justify-content-center text-info  mt-3">TESTING</h5>
                     <div class="card bg-light mt-3">
                         <div class="card-body">
                             <h5 class="card-title">Card title6</h5>
@@ -139,9 +138,9 @@
             </div>
             <!-- 3rd column END -->
             <!-- 4th column START -->
-            <div class="col fixWidth bg-white shadow rounded mr-2 ml-2 p-0 d-flex justify-content-center">
-                <div class="container connectedSortable" id="drag3">
-                    <h5 class="d-flex justify-content-center text-info  mt-3">column 4</h5>
+            <div class="col fixWidth bg-white shadow rounded mr-2 ml-2 p-0 d-flex justify-content-center border border-info">
+                <div class="container connectedSortable" id="drag4">
+                    <h5 class="d-flex justify-content-center text-info  mt-3">DONE</h5>
                     <div class="card bg-light mt-3">
                         <div class="card-body">
                             <h5 class="card-title">Card title7</h5>
