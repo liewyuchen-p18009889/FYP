@@ -15,9 +15,9 @@
 					<i class="fas fa-user"></i>&nbsp; <?php echo $_SESSION['user_name']; ?>
 				</a>
 				<div class="dropdown-menu shadow bg-white rounded" aria-labelledby="dropdownMenuLink">
-					<a class="dropdown-item" href="/FYP/dashboard.php" target="_blank"><i class="fab fa-elementor"
-							style="color: #3AAFA9"></i>&nbsp; Dashboard</a>
-					<div class="dropdown-divider"></div>
+					<!-- <a class="dropdown-item" href="/FYP/dashboard.php" target="_blank"><i class="fab fa-elementor"
+							style="color: #3AAFA9"></i>&nbsp; Dashboard</a> -->
+					<!-- <div class="dropdown-divider"></div> -->
 					<a class="dropdown-item" href="/FYP/logout.php"><i class="fas fa-sign-out-alt"
 							style="color: #3AAFA9"></i>&nbsp; Logout</a>
 				</div>

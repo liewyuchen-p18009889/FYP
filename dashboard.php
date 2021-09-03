@@ -8,20 +8,19 @@
         session_start();
         include 'import.html';
      ?>
-    <!-- Style CSS -->
-    <!-- <link rel="stylesheet" href="/FYP/signInStyle.css"> -->
+
+    <!-- Side Menu Bar Style CSS -->
+    <link rel="stylesheet" href="/FYP/sideMenuBarStyle.css">
 
     <title>UTask | Dashboard</title>
-    <style>
-    </style>
 </head>
 
 <body class="bg-light">
     <?php include 'header.php'; ?>
     <div class="container-fluid" style="padding: 30px 10px;">
         <div class="row" style="margin: 0 35px;">
-            <div class="col-6">
-                <h3 class="text-info">Dashboard</h3>
+            <div class="col-6 pl-0">
+                <h3 class="text-info"><span style="cursor:pointer" onclick="openNav()">&#9776;</span> Dashboard</h3>
             </div>
             <div class="col-6 d-flex justify-content-end">
                 <button class="btn btn-info" type="button" data-toggle="modal" data-target="#addTaskModal"><i
@@ -42,19 +41,19 @@
                     <!-- <h5 class="card-title text-info">Total Tasks</h5> -->
                     <!-- <h1 class="card-text text-center"><i class="fas fa-tachometer-alt"></i></h1> -->
                     <h2 class="card-text text-center">Total tasks</h2>
-                    <h1 class="card-text text-center text-success">188</h1>
+                    <h1 class="card-text text-center text-success"><span class="counter">188</span></h1>
                 </div>
             </div>
             <div class="card shadow border-primary">
                 <div class="card-body">
-                <h2 class="card-text text-center">To do tasks</h2>
-                    <h1 class="card-text text-center text-primary">6</h1>
+                    <h2 class="card-text text-center">To do tasks</h2>
+                    <h1 class="card-text text-center text-primary"><span class="counter">6</span></h1>
                 </div>
             </div>
             <div class="card shadow border-info">
                 <div class="card-body">
-                <h2 class="card-text text-center">In progress tasks</h2>
-                    <h1 class="card-text text-center text-info">12</h1>
+                    <h2 class="card-text text-center">In progress tasks</h2>
+                    <h1 class="card-text text-center text-info"><span class="counter">12</span></h1>
                 </div>
             </div>
             <!-- <div class="card shadow border-warning">
@@ -84,7 +83,9 @@
             </div>
         </div>
     </div>
+    <?php include 'sideMenuBar.php'; ?>
     <?php include 'footer.html'; ?>
+    <!-- bar chart START -->
     <script>
         var ctx = document.getElementById('myChart');
         var myChart = new Chart(ctx, {
@@ -122,6 +123,8 @@
             }
         });
     </script>
+    <!-- bar chart END -->
+    <!-- pie chart START -->
     <script>
         var ctx2 = document.getElementById('myChart2');
         var myChart2 = new Chart(ctx2, {
@@ -145,6 +148,22 @@
             }
         });
     </script>
+    <!-- pie chart END -->
+    <!-- counter animation START -->
+    <script>
+        $('.counter').each(function () {
+            $(this).prop('Counter', 0).animate({
+                Counter: $(this).text()
+            }, {
+                duration: 1500,
+                easing: 'swing',
+                step: function (now) {
+                    $(this).text(Math.ceil(now));
+                }
+            });
+        });
+    </script>
+    <!-- counter animation END -->
 </body>
 
 </html>
