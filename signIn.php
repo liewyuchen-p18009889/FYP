@@ -16,7 +16,7 @@
 
     <!-- show sweet alert then proceed to projectList.php START -->
     <script type="text/javascript">
-        function swalFunc() {
+        function swalSignIn() {
             $(function () {
                 swal("Sign in successfully!", "Let's start to work on your projects!", "success")
                     .then(function () {
@@ -66,7 +66,7 @@
                 $_SESSION['user_email'] = $row['user_email'];
                 $_SESSION['user_password'] = $row['user_password'];
 
-                echo '<script type="text/javascript">swalFunc();</script>';
+                echo '<script type="text/javascript">swalSignIn();</script>';
             }else{
                 array_push($signInErrorsArr, "Incorrect email or password! Please try again!111");
             }

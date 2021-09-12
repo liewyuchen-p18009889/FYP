@@ -15,7 +15,7 @@
 
     <!-- show sweet alert then proceed to projectList.php START -->
     <script type="text/javascript">
-        function swalFunc(){
+        function swalSignUp(){
             $(function () {
                 swal("Account created successfully!", "Let's start to work on your projects!", "success")
                 .then(function () {
@@ -78,7 +78,7 @@
                 $_SESSION['email'] = $email;
                 $_SESSION['success'] = "You are now logged in!";
                 
-                echo '<script type="text/javascript">swalFunc();</script>';
+                echo '<script type="text/javascript">swalSignUp();</script>';
                 // header('Location: /FYP/projectList.php');
             }else{
                 array_push($signUpErrorsArr, "Unknown error occurred!");

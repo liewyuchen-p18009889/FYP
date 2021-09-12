@@ -15,7 +15,7 @@
         }
 
         $projectTitle = validate($_POST['txtProjectTitle']);
-        $projectManager = validate($_SESSION['user_name']);
+        $projectManager = validate($_SESSION['user_id']);
 
         //ensure form fields are filled properly
 		if(empty($projectTitle)){

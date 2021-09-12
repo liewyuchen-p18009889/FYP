@@ -10,6 +10,15 @@
      ?>
     <!-- Style CSS -->
     <!-- <link rel="stylesheet" href="/FYP/signInStyle.css"> -->
+    <style>
+        .swal-text {
+            text-align: center;
+        }
+
+        .swal-footer {
+            text-align: center;
+        }
+    </style>
 
     <title>UTask | Project List</title>
 
@@ -45,6 +54,71 @@
             });
         });
         // Alerts auto close END
+
+        //Swal success add project START
+        function swalAddProSuccess() {
+            $(function () {
+                swal("Project added successfully!", "", "success");
+            });
+        }
+        //Swal success add project END
+
+        //Swal fail add project START
+        function swalAddProFail() {
+            $(function () {
+                swal("Project failed to add!", "", "warning");
+            });
+        }
+        //Swal fail add project END
+
+        // Swal delete project START
+        // function swalDelProject() {
+        //     $(function () {
+        //         // swal("Are you sure?", "Do you really want to delete this record? This process cannot be undone.", "error")
+        //         swal("Are you sure?",
+        //             "Do you really want to delete this record?\nThis process cannot be undone.", "error", {
+        //                 dangerMode: true,
+        //                 buttons: true,
+        //             });
+        //     });
+        // }
+
+        $(document).ready(function () {
+            $('.btnDelPro').click(function (e) {
+                e.preventDefault();
+                // console.log("Hello");
+
+                var delProID = $(this).closest("tr").find('.delProID').val();
+                // console.log(delProID);
+                swal({
+                        title: "Are you sure?",
+                        text: "Once deleted, you will not be able to recover this data.",
+                        icon: "error",
+                        buttons: ["Cancel", "Delete"],
+                        dangerMode: true,
+                    })
+                    .then((willDelete) => {
+                        if (willDelete) {
+                            $.ajax({
+                                type: "post",
+                                url: "/FYP/delProjectData.php",
+                                data: {
+                                    "del_set": 1,
+                                    "del_id": delProID,
+                                },
+                                success: function (response) {
+                                    swal("Project deleted successfully!", {
+                                        icon: "success",
+                                    }).then((result) => {
+                                        location.reload();
+                                    });
+                                }
+                            });
+                        }
+                    });
+            });
+        });
+        // Swal delete project START
     </script>
 </head>
 
@@ -79,8 +153,22 @@
             </div> -->
         </div>
     </div>
+
+    <!-- swal add project START -->
+    <?php
+    if(isset($_SESSION['status'])){
+        if($_SESSION['status'] == "success"){
+            echo '<script type="text/javascript">swalAddProSuccess();</script>';
+        }else if($_SESSION['status'] == "fail"){
+            echo '<script type="text/javascript">swalAddProFail();</script>';
+        }
+    }
+    unset($_SESSION['status']);
+    ?>
+    <!-- swal add project END -->
+
     <!-- alert START -->
-    <?php if(isset($_SESSION['status'])){ ?>
+    <!-- <?php if(isset($_SESSION['status'])){ ?>
     <div class="container-fluid mb-2">
         <div class="row" style="margin: 0 3px;">
             <div class="col-12">
@@ -105,8 +193,9 @@
             </div>
         </div>
     </div>
-    <?php unset($_SESSION['status']); } ?>
+    <?php unset($_SESSION['status']); } ?> -->
     <!-- alert END -->
+
     <!--add project modal START-->
     <!-- Modal -->
     <div class="modal fade bd-example-modal-lg" id="addProjectModal" tabindex="-1" role="dialog"
@@ -157,14 +246,31 @@
                             if($runQuery2){
                                 foreach($runQuery2 as $row2){
                         ?>
-                    <tr class="clickable-row" data-href="/FYP/taskBoard.php">
-                        <td><?php echo $row2['project_title']; ?></td>
-                        <td><?php echo $row2['project_manager']; ?></td>
+                    <tr>
+                        <!-- <tr class="clickable-row" data-href="/FYP/taskBoard.php"> -->
+                        <td><a href="/FYP/taskBoard.php" class="text-info"><?php echo $row2['project_title']; ?></a>
+                        </td>
+                        <td>
+                            <?php 
+                                $query3 = "SELECT * FROM users WHERE user_id=".$row2['project_manager'];
+                                $runQuery3 = mysqli_query($dbc, $query3);
+
+                                if($runQuery3){
+                                    foreach($runQuery3 as $row3){
+                                        echo $row3['user_name'];
+                                    }
+                                }
+                                // echo $row2['project_manager']; 
+                            ?>
+                        </td>
                         <td>
                             <button type="button" class="btn btn-info btnEdit"><i class="fas fa-edit"
                                     style="font-size: 14px;"></i></button>
-                            <button type="button" class="btn btn-danger btnDel"><i class="fas fa-trash"
-                                    style="font-size: 14px;"></i></button>
+                            <!-- <button type="button" class="btn btn-danger btnDel" onclick="swalDelProject()"><i
+                                    class="fas fa-trash" style="font-size: 14px;"></i></button> -->
+                            <input type="hidden" class="delProID" value="<?php echo $row2['project_id']; ?>">
+                            <a href="javascript:void(0)" class="btn btn-danger btnDelPro"><i class="fas fa-trash"
+                                    style="font-size: 14px;"></i></a>
                         </td>
                     </tr>
                     <?php
@@ -172,18 +278,6 @@
                             }
                         ?>
                 </tbody>
-                <!-- <tbody>
-                            <tr>
-                                <td>1</td>
-                                <td>1</td>
-                                <td>1</td>
-                            </tr>
-                            <tr>
-                                <td>5</td>
-                                <td>5</td>
-                                <td>5</td>
-                            </tr>
-                        </tbody> -->
             </table>
         </div>
     </div>
