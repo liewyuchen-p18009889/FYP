@@ -24,7 +24,7 @@
 
         //no errors
         if(count($errorsAddProjectArr) == 0){
-            $query = "INSERT INTO projects (project_title, project_manager, project_datetime) 
+            $query = "INSERT INTO projects (project_title, user_id, project_datetime) 
 			VALUES ('$projectTitle', '$projectManager', NOW())";
             $runQuery = mysqli_query($dbc, $query);
 

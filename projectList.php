@@ -35,54 +35,48 @@
             });
         });
         // Table row link END
-        // Alerts auto close START
-        $(document).ready(function () {
-            $("#alertSuccess").fadeTo(2000, 500).slideUp(500, function () {
-                $("#alertSuccess").slideUp(500);
-            });
-        });
 
-        $(document).ready(function () {
-            $("#alertDanger1").fadeTo(2000, 500).slideUp(500, function () {
-                $("#alertDanger1").slideUp(500);
-            });
-        });
-
-        $(document).ready(function () {
-            $("#alertDanger1").fadeTo(2000, 500).slideUp(500, function () {
-                $("#alertDanger2").slideUp(500);
-            });
-        });
-        // Alerts auto close END
-
-        //Swal success add project START
-        function swalAddProSuccess() {
-            $(function () {
-                swal("Project added successfully!", "", "success");
-            });
+        // add project START
+        function submitAddProject() {
+            var projectTitle = $('#inputProjectTitle').val();
+            if (projectTitle.trim() == '') {
+                $('.statusMsg').text('Project title is required!');
+                $('#inputProjectTitle').focus();
+                return false;
+            } else {
+                $.ajax({
+                    type: 'POST',
+                    url: '/FYP/addProjectData2.php',
+                    data: 'addProjectForm=1&txtProjectTitle=' + projectTitle,
+                    beforeSend: function () {
+                        $('.btnAddProject').attr("disabled", "disabled");
+                        $('.modal-body').css('opacity', '.5');
+                    },
+                    success: function (response) {
+                        if (response == 'success') {
+                            $('#inputProjectTitle').val('');
+                            swal({
+                                title: "Project added successfully!",
+                                icon: "success",
+                            }).then((result) => {
+                                location.reload();
+                            });
+                            console.log(response);
+                        } else {
+                            $(function () {
+                                swal("Project failed to add!", "", "warning");
+                            });
+                            console.log(response);
+                        }
+                        $('.btnAddProject').removeAttr("disabled");
+                        $('.modal-body').css('opacity', '');
+                    }
+                });
+            }
         }
-        //Swal success add project END
-
-        //Swal fail add project START
-        function swalAddProFail() {
-            $(function () {
-                swal("Project failed to add!", "", "warning");
-            });
-        }
-        //Swal fail add project END
+        // add project END 
 
         // Swal delete project START
-        // function swalDelProject() {
-        //     $(function () {
-        //         // swal("Are you sure?", "Do you really want to delete this record? This process cannot be undone.", "error")
-        //         swal("Are you sure?",
-        //             "Do you really want to delete this record?\nThis process cannot be undone.", "error", {
-        //                 dangerMode: true,
-        //                 buttons: true,
-        //             });
-        //     });
-        // }
-
         $(document).ready(function () {
             $('.btnDelPro').click(function (e) {
                 e.preventDefault();
@@ -107,7 +101,8 @@
                                     "del_id": delProID,
                                 },
                                 success: function (response) {
-                                    swal("Project deleted successfully!", {
+                                    swal({
+                                        title: "Project deleted successfully!",
                                         icon: "success",
                                     }).then((result) => {
                                         location.reload();
@@ -154,48 +149,6 @@
         </div>
     </div>
 
-    <!-- swal add project START -->
-    <?php
-    if(isset($_SESSION['status'])){
-        if($_SESSION['status'] == "success"){
-            echo '<script type="text/javascript">swalAddProSuccess();</script>';
-        }else if($_SESSION['status'] == "fail"){
-            echo '<script type="text/javascript">swalAddProFail();</script>';
-        }
-    }
-    unset($_SESSION['status']);
-    ?>
-    <!-- swal add project END -->
-
-    <!-- alert START -->
-    <!-- <?php if(isset($_SESSION['status'])){ ?>
-    <div class="container-fluid mb-2">
-        <div class="row" style="margin: 0 3px;">
-            <div class="col-12">
-                <?php if($_SESSION['status'] == "success"){ ?>
-                <div class="alert alert-success alert-dismissible fade show" role="alert" id="alertSuccess">
-                    <strong>Well done!</strong> The project is created successfully!
-
-                    <?php }else if($_SESSION['status'] == "fail"){ ?>
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert" id="alertDanger1">
-                        <strong>Oh snap!</strong> The project was not created!
-
-                        <?php }else{ ?>
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert" id="alertDanger2">
-                            <strong>Oh snap!</strong> The project was not created!
-                            <?php } ?>
-                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <?php unset($_SESSION['status']); } ?> -->
-    <!-- alert END -->
-
     <!--add project modal START-->
     <!-- Modal -->
     <div class="modal fade bd-example-modal-lg" id="addProjectModal" tabindex="-1" role="dialog"
@@ -208,20 +161,27 @@
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
-                <form action="/FYP/addProjectData.php" method="post" enctype="multipart/form-data">
-                    <div class="modal-body">
+
+                <!-- <form action="/FYP/addProjectData.php" method="post" enctype="multipart/form-data"> -->
+
+                <div class="modal-body">
+                    <form role="form">
                         <input type="hidden" name="insertProject_id" id="insertProject_id">
-                        <div class="form-group">
+                        <div class="form-group m-0">
                             <label for="inputProjectTitle">Project Title:</label>
                             <input type="text" class="form-control" name="txtProjectTitle" id="inputProjectTitle"
                                 aria-describedby="emailHelp" placeholder="Enter project title">
+                            <p class="m-0 p-2 text-danger statusMsg"></p>
                         </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <button type="submit" class="btn btn-info" name="addProjectData">Create</button>
-                    </div>
-                </form>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <!-- <button type="submit" class="btn btn-info" name="addProjectData">Create</button> -->
+                    <button type="button" class="btn btn-info btnAddProject"
+                        onclick="submitAddProject()">Create</button>
+                </div>
+                <!-- </form> -->
             </div>
         </div>
     </div>
@@ -252,7 +212,7 @@
                         </td>
                         <td>
                             <?php 
-                                $query3 = "SELECT * FROM users WHERE user_id=".$row2['project_manager'];
+                                $query3 = "SELECT * FROM users WHERE user_id=".$row2['user_id'];
                                 $runQuery3 = mysqli_query($dbc, $query3);
 
                                 if($runQuery3){
