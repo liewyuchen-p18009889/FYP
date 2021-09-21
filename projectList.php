@@ -38,23 +38,23 @@
 
         // add project START
         function submitAddProject() {
-            var projectTitle = $('#inputProjectTitle').val();
+            var projectTitle = $('#add_projectTitle').val();
             if (projectTitle.trim() == '') {
                 $('.statusMsg').text('Project title is required!');
-                $('#inputProjectTitle').focus();
+                $('#add_projectTitle').focus();
                 return false;
             } else {
                 $.ajax({
                     type: 'POST',
                     url: '/FYP/addProjectData2.php',
-                    data: 'addProjectForm=1&txtProjectTitle=' + projectTitle,
+                    data: 'addProjectForm=1&addProjectTitle=' + projectTitle,
                     beforeSend: function () {
                         $('.btnAddProject').attr("disabled", "disabled");
                         $('.modal-body').css('opacity', '.5');
                     },
                     success: function (response) {
                         if (response == 'success') {
-                            $('#inputProjectTitle').val('');
+                            $('#add_projectTitle').val('');
                             swal({
                                 title: "Project added successfully!",
                                 icon: "success",
@@ -75,6 +75,69 @@
             }
         }
         // add project END 
+
+        // edit project START
+        $(document).ready(function () {
+            $('.btnUpdPro').on('click', function () {
+
+                // $('#updProjectModal').modal('show');
+
+                $tr = $(this).closest('tr');
+
+                var data = $tr.children("td").map(function () {
+                    return $(this).text();
+                }).get();
+
+                // console.log(data);
+
+                var id = $(this).closest("tr").find('.updProjectID').val();
+                var title = data[0].trim();
+
+                $('#upd_projectID').val(id);
+                $('#upd_projectTitle').val(title);
+            });
+        });
+
+        function submitUpdProject() {
+            var id = $('#upd_projectID').val();
+            var projectTitle = $('#upd_projectTitle').val();
+
+            if (projectTitle.trim() == '') {
+                $('.statusMsg').text('Project title is required!');
+                $('#upd_projectTitle').focus();
+                return false;
+            } else {
+                $.ajax({
+                    type: 'POST',
+                    url: '/FYP/updProjectData.php',
+                    data: 'updProjectForm=1&updProjectTitle=' + projectTitle + '&updateProject_id=' + id,
+                    beforeSend: function () {
+                        $('.btnUpdProject').attr("disabled", "disabled");
+                        $('.modal-body').css('opacity', '.5');
+                    },
+                    success: function (response) {
+                        if (response == 'success') {
+                            $('#upd_projectTitle').val('');
+                            swal({
+                                title: "Project updated successfully!",
+                                icon: "success",
+                            }).then((result) => {
+                                location.reload();
+                            });
+                            console.log(response);
+                        } else {
+                            $(function () {
+                                swal("Project failed to update!", "", "warning");
+                            });
+                            console.log(response);
+                        }
+                        $('.btnUpdProject').removeAttr("disabled");
+                        $('.modal-body').css('opacity', '');
+                    }
+                });
+            }
+        }
+        // edit project END
 
         // Swal delete project START
         $(document).ready(function () {
@@ -169,7 +232,7 @@
                         <input type="hidden" name="insertProject_id" id="insertProject_id">
                         <div class="form-group m-0">
                             <label for="inputProjectTitle">Project Title:</label>
-                            <input type="text" class="form-control" name="txtProjectTitle" id="inputProjectTitle"
+                            <input type="text" class="form-control" name="addProjectTitle" id="add_projectTitle"
                                 aria-describedby="emailHelp" placeholder="Enter project title">
                             <p class="m-0 p-2 text-danger statusMsg"></p>
                         </div>
@@ -186,6 +249,40 @@
         </div>
     </div>
     <!--add project modal END-->
+    <!--edit project modal START-->
+    <!-- Modal -->
+    <div class="modal fade bd-example-modal-lg" id="updProjectModal" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Project</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form action="\FYP\updProjectData.php" method="post">
+                        <input type="hidden" name="updateProject_id" id="upd_projectID">
+                        <div class="form-group m-0">
+                            <label for="inputProjectTitle">Project Title:</label>
+                            <input type="text" class="form-control" name="updProjectTitle" id="upd_projectTitle"
+                                aria-describedby="emailHelp" placeholder="Enter project title">
+                            <p class="m-0 p-2 text-danger statusMsg"></p>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                    <!-- <button type="submit" class="btn btn-info" name="addProjectData">Create</button> -->
+                    <button type="button" class="btn btn-info btnUpdProject" onclick="submitUpdProject()">Save</button>
+                    <!-- <button type="submit" class="btn btn-info btnAddProject">Save</button> -->
+                </div>
+                <!-- </form> -->
+            </div>
+        </div>
+    </div>
+    <!--edit project modal END-->
     <!-- project datatable START -->
     <div class="container-fluid mb-4">
         <div class="card shadow p-4 mb-5 ml-3 mr-3 bg-white rounded" style="min-height: 516px;">
@@ -224,8 +321,11 @@
                             ?>
                         </td>
                         <td>
-                            <button type="button" class="btn btn-info btnEdit"><i class="fas fa-edit"
-                                    style="font-size: 14px;"></i></button>
+                            <!-- <button type="button" class="btn btn-info btnEdit"><i class="fas fa-edit"
+                                    style="font-size: 14px;"></i></button> -->
+                            <input type="hidden" class="updProjectID" id="" value="<?php echo $row2['project_id']; ?>">
+                            <button class="btn btn-info btnUpdPro" data-toggle="modal" data-target="#updProjectModal"><i
+                                    class="fas fa-edit" style="font-size: 14px;"></i></button>
                             <!-- <button type="button" class="btn btn-danger btnDel" onclick="swalDelProject()"><i
                                     class="fas fa-trash" style="font-size: 14px;"></i></button> -->
                             <input type="hidden" class="delProID" value="<?php echo $row2['project_id']; ?>">

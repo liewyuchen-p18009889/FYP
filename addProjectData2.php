@@ -2,14 +2,14 @@
     session_start();
     include 'connectDB.php';
 
-    if(isset($_POST['addProjectForm']) && !empty($_POST['txtProjectTitle'])){
+    if(isset($_POST['addProjectForm']) && !empty($_POST['addProjectTitle'])){
     
-        $projectTitle = $_POST['txtProjectTitle'];
+        $projectTitle = $_POST['addProjectTitle'];
         $projectManager = $_SESSION['user_id'];
     }
 
-    $query = "INSERT INTO projects (project_title, user_id, project_datetime) 
-			VALUES ('$projectTitle', '$projectManager', NOW())";
+    $query = "INSERT INTO projects (project_title, user_id, created_at, updated_at) 
+			VALUES ('$projectTitle', '$projectManager', NOW(), NOW())";
     $runQuery = mysqli_query($dbc, $query);
 
     if($runQuery){
@@ -20,5 +20,5 @@
 
     echo $status;die;   //status output
 
-    mysqli_close();
+    mysqli_close($dbc);
 ?>
