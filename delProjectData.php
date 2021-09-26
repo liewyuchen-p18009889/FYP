@@ -3,6 +3,7 @@
 
     if(isset($_POST['del_set'])){
         $delID = $_POST['del_id'];
+        echo "After ajax: ".$delID;
     }
 
     $query = "DELETE FROM projects WHERE project_id=".$delID;

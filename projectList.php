@@ -139,14 +139,21 @@
         }
         // edit project END
 
+        // delete project START
+        // function swalDelProject() {
+        //     var delProID = $('.del_projectID').val();
+        //     console.log("del function: " + delProID);
+        // }
+        // delete project END
+
         // Swal delete project START
         $(document).ready(function () {
-            $('.btnDelPro').click(function (e) {
+            $('.btnDel').click(function (e) {
                 e.preventDefault();
                 // console.log("Hello");
 
                 var delProID = $(this).closest("tr").find('.delProID').val();
-                // console.log(delProID);
+                console.log(delProID);
                 swal({
                         title: "Are you sure?",
                         text: "Once deleted, you will not be able to recover this data.",
@@ -158,12 +165,13 @@
                         if (willDelete) {
                             $.ajax({
                                 type: "post",
-                                url: "/FYP/delProjectData.php",
+                                url: "/FYP/delProjectData2.php",
                                 data: {
                                     "del_set": 1,
                                     "del_id": delProID,
                                 },
                                 success: function (response) {
+                                    console.log(response);
                                     swal({
                                         title: "Project deleted successfully!",
                                         icon: "success",
@@ -291,52 +299,86 @@
                     <tr>
                         <th>Title</th>
                         <th>Project Manager</th>
+                        <?php
+                        $query5 = "SELECT * FROM users WHERE user_id={$_SESSION['user_id']}";
+                        $runQuery5 = mysqli_query($dbc, $query5);
+
+                        if($runQuery5){
+                            foreach($runQuery5 as $row5){
+                                if($row5['isProjectManager']){    
+                        ?>
                         <th>Edit/Delete</th>
+                        <?php
+                                }
+                            }
+                        }
+                        ?>
                     </tr>
                 </thead>
                 <tbody>
                     <?php
-                            $query2 = "SELECT * FROM projects";
-                            // $query2 = "SELECT * FROM projects ORDER BY project_datetime DESC";
-                            $runQuery2 = mysqli_query($dbc, $query2);
+                        $query2 = "SELECT * FROM project_members WHERE user_id={$_SESSION['user_id']}";
+                        $runQuery2 = mysqli_query($dbc, $query2);
 
-                            if($runQuery2){
-                                foreach($runQuery2 as $row2){
-                        ?>
-                    <tr>
-                        <!-- <tr class="clickable-row" data-href="/FYP/taskBoard.php"> -->
-                        <td><a href="/FYP/taskBoard.php" class="text-info"><?php echo $row2['project_title']; ?></a>
-                        </td>
-                        <td>
-                            <?php 
-                                $query3 = "SELECT * FROM users WHERE user_id=".$row2['user_id'];
+                        if($runQuery2){
+                            foreach($runQuery2 as $row2){
+                                $query3 = "SELECT * FROM projects WHERE project_id={$row2['project_id']}";
                                 $runQuery3 = mysqli_query($dbc, $query3);
 
                                 if($runQuery3){
                                     foreach($runQuery3 as $row3){
-                                        echo $row3['user_name'];
-                                    }
+                    ?>
+                    <tr>
+                        <td>
+                            <a href="/FYP/taskBoard.php?id=<?php echo $row3['project_id'] ?>"
+                                class="text-info"><?php echo $row3['project_title']; ?></a>
+                        </td>
+                        <td>
+                            <?php 
+                            // echo $row3['project_creator']; 
+                            $query4 = "SELECT * FROM users WHERE user_id={$row3['project_creator']}";
+                            $runQuery4 = mysqli_query($dbc, $query4);
+
+                            if($runQuery4){
+                                foreach($runQuery4 as $row4){
+                                    echo $row4['user_name'];
                                 }
-                                // echo $row2['project_manager']; 
+                            }
                             ?>
                         </td>
+                        <?php
+                        $query6 = "SELECT * FROM users WHERE user_id={$_SESSION['user_id']}";
+                        $runQuery6 = mysqli_query($dbc, $query6);
+
+                        if($runQuery6){
+                            foreach($runQuery6 as $row6){
+                                if($row5['isProjectManager']){    
+                        ?>
                         <td>
                             <!-- <button type="button" class="btn btn-info btnEdit"><i class="fas fa-edit"
                                     style="font-size: 14px;"></i></button> -->
-                            <input type="hidden" class="updProjectID" id="" value="<?php echo $row2['project_id']; ?>">
+                            <input type="hidden" class="updProjectID" id="" value="<?php echo $row3['project_id']; ?>">
                             <button class="btn btn-info btnUpdPro" data-toggle="modal" data-target="#updProjectModal"><i
                                     class="fas fa-edit" style="font-size: 14px;"></i></button>
-                            <!-- <button type="button" class="btn btn-danger btnDel" onclick="swalDelProject()"><i
-                                    class="fas fa-trash" style="font-size: 14px;"></i></button> -->
-                            <input type="hidden" class="delProID" value="<?php echo $row2['project_id']; ?>">
-                            <a href="javascript:void(0)" class="btn btn-danger btnDelPro"><i class="fas fa-trash"
-                                    style="font-size: 14px;"></i></a>
+                            <input type="hidden" class="delProID" id="del_projectID" value="<?php echo $row3['project_id']; ?>">
+                            <button type="button" class="btn btn-danger btnDel"><i
+                                    class="fas fa-trash" style="font-size: 14px;"></i></button>
+
+                            <!-- <a href="javascript:void(0)" class="btn btn-danger btnDelPro"><i class="fas fa-trash"
+                                    style="font-size: 14px;"></i></a> -->
                         </td>
-                    </tr>
-                    <?php
+                        <?php
                                 }
                             }
+                        }
                         ?>
+                    </tr>
+                    <?php
+                                    }
+                                }
+                            }
+                        }
+                    ?>
                 </tbody>
             </table>
         </div>
