@@ -15,6 +15,10 @@
             text-align: center;
         }
 
+        .swal-button {
+            background-color: #3AAFA9;
+        }
+
         .swal-footer {
             text-align: center;
         }
@@ -270,7 +274,7 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form action="\FYP\updProjectData.php" method="post">
+                    <form role="form" method="post">
                         <input type="hidden" name="updateProject_id" id="upd_projectID">
                         <div class="form-group m-0">
                             <label for="inputProjectTitle">Project Title:</label>
@@ -360,9 +364,10 @@
                             <input type="hidden" class="updProjectID" id="" value="<?php echo $row3['project_id']; ?>">
                             <button class="btn btn-info btnUpdPro" data-toggle="modal" data-target="#updProjectModal"><i
                                     class="fas fa-edit" style="font-size: 14px;"></i></button>
-                            <input type="hidden" class="delProID" id="del_projectID" value="<?php echo $row3['project_id']; ?>">
-                            <button type="button" class="btn btn-danger btnDel"><i
-                                    class="fas fa-trash" style="font-size: 14px;"></i></button>
+                            <input type="hidden" class="delProID" id="del_projectID"
+                                value="<?php echo $row3['project_id']; ?>">
+                            <button type="button" class="btn btn-danger btnDel"><i class="fas fa-trash"
+                                    style="font-size: 14px;"></i></button>
 
                             <!-- <a href="javascript:void(0)" class="btn btn-danger btnDelPro"><i class="fas fa-trash"
                                     style="font-size: 14px;"></i></a> -->
