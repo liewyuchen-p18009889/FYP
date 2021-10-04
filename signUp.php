@@ -75,11 +75,19 @@
             $runQuery2 = mysqli_query($dbc, $query2);
 
             if($runQuery2){  
-                $_SESSION['email'] = $email;
-                $_SESSION['success'] = "You are now logged in!";
-                
-                echo '<script type="text/javascript">swalSignUp();</script>';
-                // header('Location: /FYP/projectList.php');
+                $_SESSION['user_email'] = $email;
+                $_SESSION['user_name'] = $name;
+
+                // to fix bug from header.php
+                $query3 = "SELECT * FROM users WHERE user_email='$email'";
+                $runQuery3 = mysqli_query($dbc, $query3);
+
+                if($runQuery3){
+                    $row = mysqli_fetch_assoc($runQuery3); //to fetch a result row as an associative array
+                    $_SESSION['user_id'] = $row['user_id'];
+
+                    echo '<script type="text/javascript">swalSignUp();</script>';
+                }                
             }else{
                 array_push($signUpErrorsArr, "Unknown error occurred!");
             }              
