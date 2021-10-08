@@ -23,10 +23,7 @@
         .swal-footer {
             text-align: center;
         }
-    </style>
 
-    <title>UTask | Task Board</title>
-    <style>
         .scrollBar {
             display: flex;
             overflow-x: auto;
@@ -37,6 +34,8 @@
             flex: 0 0 354px;
         }
     </style>
+
+    <title>UTask | Task Board</title>
     <!-- drag START -->
     <script>
         $(function () {
@@ -71,7 +70,7 @@
         // }
 
         // add tasks START
-        function submitAddTask(){
+        function submitAddTask() {
             var inputErrorArr = []; // to store errors of input field
             var projectID = $('#add_task_projectID').val();
             var taskTitle = $('#add_taskTitle').val();
@@ -96,8 +95,8 @@
                 $('#add_taskEnd').focus();
                 inputErrorArr.push(1);
             }
-            if(taskStart.trim() != '' && taskEnd.trim() != ''){
-                if(Date.parse(taskEnd) < Date.parse(taskStart)){
+            if (taskStart.trim() != '' && taskEnd.trim() != '') {
+                if (Date.parse(taskEnd) < Date.parse(taskStart)) {
                     $('.addTaskEndMsg').text('Invalid end date! Plasee try again!');
                     inputErrorArr.push(1);
                 }
@@ -118,20 +117,20 @@
                 inputErrorArr.push(1);
             }
 
-            if(inputErrorArr.length == 0){
+            if (inputErrorArr.length == 0) {
                 $.ajax({
                     type: "POST",
                     url: "/FYP/addTaskData.php",
                     // data: "addTaskForm=1",
                     data: {
                         "addTaskForm": 1,
-                        "addTaskTitle" : taskTitle,
-                        "addTaskStart" : taskStart,
-                        "addTaskEnd" : taskEnd,
-                        "addTaskAsignee" : taskAsignee,
-                        "addTaskStatus" : taskStatus,
-                        "addTaskDescrp" : taskDescrp,
-                        "projectID" : projectID
+                        "addTaskTitle": taskTitle,
+                        "addTaskStart": taskStart,
+                        "addTaskEnd": taskEnd,
+                        "addTaskAsignee": taskAsignee,
+                        "addTaskStatus": taskStatus,
+                        "addTaskDescrp": taskDescrp,
+                        "projectID": projectID
                     },
                     beforeSend: function () {
                         $('.btnAddTask').attr("disabled", "disabled");
@@ -146,14 +145,14 @@
                             }).then((result) => {
                                 location.reload();
                             });
-                        // } else if (response == 'fail1') {
-                        //     $(function () {
-                        //         swal("No such user!", "", "warning");
-                        //     });
-                        // } else if (response == 'fail2') {
-                        //     $(function () {
-                        //         swal("User is already a member!", "", "warning");
-                        //     });
+                            // } else if (response == 'fail1') {
+                            //     $(function () {
+                            //         swal("No such user!", "", "warning");
+                            //     });
+                            // } else if (response == 'fail2') {
+                            //     $(function () {
+                            //         swal("User is already a member!", "", "warning");
+                            //     });
                         } else {
                             $(function () {
                                 swal("Something went wrong!", "", "warning");
@@ -218,13 +217,34 @@
 </head>
 
 <body class="bg-light">
-    <?php include 'header.php'; ?>
+    <?php include 'header.php'; 
+    
+        function formatTitle($title){
+            if(strlen($title) > 24){
+                echo substr($title, 0, 24).'...';
+            }else{
+                echo $title;
+            }
+        }
+
+        function formatUsername($username){
+            if(strlen($username) > 10){
+                echo substr($username, 0, 10).'..';
+            }else{
+                echo $username;
+            }
+        }
+
+        function formatEndDate($endDate){
+            echo date('dM', strtotime($endDate));
+        }
+    ?>
     <div class="container-fluid" style="padding: 30px 10px;">
         <div class="row" style="margin: 0 35px;">
             <div class="col-md-6 col-xs-12 p-0">
                 <h3 class="text-info"><span style="cursor:pointer" onclick="openNav()">&#9776;</span> Task Board</h3>
             </div>
-            <div class="col-md-6 col-xs-12 p-0 d-md-flex justify-content-end">            
+            <div class="col-md-6 col-xs-12 p-0 d-flex justify-content-end">
                 <?php
                 $email = $_SESSION['user_email'];
                 $query1 = "SELECT * FROM users WHERE user_email='$email' AND isProjectManager='1'";
@@ -255,28 +275,40 @@
             <div
                 class="col fixWidth bg-white shadow rounded mr-2 ml-2 p-0 d-flex justify-content-center border border-info">
                 <div class="container connectedSortable" id="drag1">
-                    <h5 class="d-flex justify-content-center text-info  mt-3">TO DO</h5>
+                    <h5 class="d-flex justify-content-center text-info mt-3 mb-3">TO DO</h5>
+                    <?php
+                        $projectID = $_GET['id'];
+                        // $query3 = "SELECT * FROM tasks 
+                        //             WHERE task_project=$projectID AND task_status='toDo'";
+                        $query3 = "SELECT * FROM tasks 
+                                    INNER JOIN users ON tasks.task_asignee=users.user_id 
+                                    WHERE task_project=$projectID AND task_status ='toDo'";
+                        $runQuery3 = mysqli_query($dbc, $query3);
 
-                    <div class="card bg-light mt-3">
+                        if($runQuery3){
+                            foreach($runQuery3 as $row3){
+                    ?>
+                    <div class="card bg-light mt-2 mb-2">
                         <div class="card-body p-2">
-                            <button type="button" class="btn btn-light" data-toggle="modal" data-target="#updTaskModal">
-                                <h5 class="card-title">Card title1</h5>
-                                <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-                                <!-- <p class="card-text">Some quick example text to build on the card title and make up the bulk
-                                of the card's content.</p> -->
+                            <button type="button" class="btn btn-link text-info" data-toggle="modal" data-target="#updTaskModal">
+                                <h4 class="card-title text-left"><?php formatTitle($row3['task_title']); ?></h4>
                             </button>
+                            <div class="row ml-1 mr-1">
+                                <div class="col-6">
+                                    <h6 class="card-text mb-2 text-muted">
+                                        <i class="far fa-clock"></i>&nbsp;<?php formatEndDate($row3['task_end']); ?>
+                                    </h6>
+                                </div>
+                                <div class="col-6 d-flex justify-content-end">
+                                    <h6 class="text-muted"><i class="fas fa-user"></i>&nbsp;<?php formatUsername($row3['user_name']); ?></h6>
+                                </div>
+                            </div>
                         </div>
                     </div>
-
-
-                    <div class="card bg-light mt-3">
-                        <div class="card-body">
-                            <h5 class="card-title">Card title2</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">Card subtitle</h6>
-                            <!-- <p class="card-text">Some quick example text to build on the card title and make up the bulk
-                                of the card's content.</p> -->
-                        </div>
-                    </div>
+                    <?php
+                            }
+                        }
+                    ?>
                 </div>
             </div>
             <!-- 1st column END -->
@@ -284,23 +316,37 @@
             <div
                 class="col fixWidth bg-white shadow rounded mr-2 ml-2 p-0 d-flex justify-content-center border border-info">
                 <div class="container connectedSortable" id="drag2">
-                    <h5 class="d-flex justify-content-center text-info  mt-3">IN PROGRESS</h5>
-                    <div class="card bg-light mt-3">
-                        <div class="card-body">
-                            <h5 class="card-title">Card title3</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">Card subtitle3</h6>
-                            <!-- <p class="card-text">Some quick example text to build on the card title and make up the bulk
-                                of the card's content.</p> -->
+                    <h5 class="d-flex justify-content-center text-info mt-3 mb-3">IN PROGRESS</h5>
+                    <?php
+                        $query4 = "SELECT * FROM tasks 
+                                    INNER JOIN users ON tasks.task_asignee=users.user_id 
+                                    WHERE task_project=$projectID AND task_status ='inProgress'";
+                        $runQuery4 = mysqli_query($dbc, $query4);
+
+                        if($runQuery4){
+                            foreach($runQuery4 as $row4){
+                    ?>
+                    <div class="card bg-light mt-2 mb-2">
+                        <div class="card-body p-2">
+                            <button type="button" class="btn btn-link text-info" data-toggle="modal" data-target="#updTaskModal">
+                                <h4 class="card-title text-left"><?php formatTitle($row4['task_title']); ?></h4>
+                            </button>
+                            <div class="row ml-1 mr-1">
+                                <div class="col-6">
+                                    <h6 class="card-text mb-2 text-muted">
+                                        <i class="far fa-clock"></i>&nbsp;<?php formatEndDate($row4['task_end']); ?>
+                                    </h6>
+                                </div>
+                                <div class="col-6 d-flex justify-content-end">
+                                    <h6 class="text-muted"><i class="fas fa-user"></i>&nbsp;<?php formatUsername($row4['user_name']); ?></h6>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="card bg-light mt-3">
-                        <div class="card-body">
-                            <h5 class="card-title">Card title4</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">Card subtitle4</h6>
-                            <!-- <p class="card-text">Some quick example text to build on the card title and make up the bulk
-                                of the card's content.</p> -->
-                        </div>
-                    </div>
+                    <?php
+                            }
+                        }
+                    ?>                    
                 </div>
             </div>
             <!-- 2nd column END -->
@@ -308,23 +354,37 @@
             <div
                 class="col fixWidth bg-white shadow rounded mr-2 ml-2 p-0 d-flex justify-content-center border border-info">
                 <div class="container connectedSortable" id="drag3">
-                    <h5 class="d-flex justify-content-center text-info  mt-3">TESTING</h5>
-                    <div class="card bg-light mt-3">
-                        <div class="card-body">
-                            <h5 class="card-title">Card title6</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">Card subtitle6</h6>
-                            <!-- <p class="card-text">Some quick example text to build on the card title and make up the bulk
-                                of the card's content.</p> -->
+                    <h5 class="d-flex justify-content-center text-info mt-3 mb-3">TESTING</h5>
+                    <?php
+                        $query5 = "SELECT * FROM tasks 
+                                    INNER JOIN users ON tasks.task_asignee=users.user_id 
+                                    WHERE task_project=$projectID AND task_status ='test'";
+                        $runQuery5 = mysqli_query($dbc, $query5);
+
+                        if($runQuery5){
+                            foreach($runQuery5 as $row5){
+                    ?>
+                    <div class="card bg-light mt-2 mb-2">
+                        <div class="card-body p-2">
+                            <button type="button" class="btn btn-link text-info" data-toggle="modal" data-target="#updTaskModal">
+                                <h4 class="card-title text-left"><?php formatTitle($row5['task_title']); ?></h4>
+                            </button>
+                            <div class="row ml-1 mr-1">
+                                <div class="col-6">
+                                    <h6 class="card-text mb-2 text-muted">
+                                        <i class="far fa-clock"></i>&nbsp;<?php formatEndDate($row5['task_end']); ?>
+                                    </h6>
+                                </div>
+                                <div class="col-6 d-flex justify-content-end">
+                                    <h6 class="text-muted"><i class="fas fa-user"></i>&nbsp;<?php formatUsername($row5['user_name']); ?></h6>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="card bg-light mt-3">
-                        <div class="card-body">
-                            <h5 class="card-title">Card title5</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">Card subtitle5</h6>
-                            <!-- <p class="card-text">Some quick example text to build on the card title and make up the bulk
-                                of the card's content.</p> -->
-                        </div>
-                    </div>
+                    <?php
+                            }
+                        }
+                    ?> 
                 </div>
             </div>
             <!-- 3rd column END -->
@@ -332,23 +392,37 @@
             <div
                 class="col fixWidth bg-white shadow rounded mr-2 ml-2 p-0 d-flex justify-content-center border border-info">
                 <div class="container connectedSortable" id="drag4">
-                    <h5 class="d-flex justify-content-center text-info  mt-3">DONE</h5>
-                    <div class="card bg-light mt-3">
-                        <div class="card-body">
-                            <h5 class="card-title">Card title7</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">Card subtitle6</h6>
-                            <!-- <p class="card-text">Some quick example text to build on the card title and make up the bulk
-                                of the card's content.</p> -->
+                    <h5 class="d-flex justify-content-center text-info mt-3 mb-3">DONE</h5>
+                    <?php
+                        $query6 = "SELECT * FROM tasks 
+                                    INNER JOIN users ON tasks.task_asignee=users.user_id 
+                                    WHERE task_project=$projectID AND task_status ='done'";
+                        $runQuery6 = mysqli_query($dbc, $query6);
+
+                        if($runQuery6){
+                            foreach($runQuery6 as $row6){
+                    ?>
+                    <div class="card bg-light mt-2 mb-2">
+                        <div class="card-body p-2">
+                            <button type="button" class="btn btn-link text-info" data-toggle="modal" data-target="#updTaskModal">
+                                <h4 class="card-title text-left"><?php formatTitle($row6['task_title']); ?></h4>
+                            </button>
+                            <div class="row ml-1 mr-1">
+                                <div class="col-6">
+                                    <h6 class="card-text mb-2 text-muted">
+                                        <i class="far fa-clock"></i>&nbsp;<?php formatEndDate($row6['task_end']); ?>
+                                    </h6>
+                                </div>
+                                <div class="col-6 d-flex justify-content-end">
+                                    <h6 class="text-muted"><i class="fas fa-user"></i>&nbsp;<?php formatUsername($row6['user_name']); ?></h6>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="card bg-light mt-3">
-                        <div class="card-body">
-                            <h5 class="card-title">Card title8</h5>
-                            <h6 class="card-subtitle mb-2 text-muted">Card subtitle5</h6>
-                            <!-- <p class="card-text">Some quick example text to build on the card title and make up the bulk
-                                of the card's content.</p> -->
-                        </div>
-                    </div>
+                    <?php
+                            }
+                        }
+                    ?> 
                 </div>
             </div>
             <!-- 4th column END -->
@@ -370,7 +444,8 @@
                         <form role="form">
                             <div class="form-row">
                                 <input type="hidden" name="insertTask_id" id="insertTask_id">
-                                <input type="hidden" name="add_task_projectID" id="add_task_projectID" value="<?php echo $_GET['id']; ?>">
+                                <input type="hidden" name="add_task_projectID" id="add_task_projectID"
+                                    value="<?php echo $_GET['id']; ?>">
                                 <div class="form-group col-md-12 m-0">
                                     <label for="inputTaskTitle">Title:</label>
                                     <input type="text" class="form-control" name="addTaskTitle" id="add_taskTitle"
@@ -391,10 +466,10 @@
                                 </div>
                                 <div class="form-group col-md-6">
                                     <label for="inputTaskAsignee">Asignee:</label>
-                                    <select id="add_taskAsignee" class="form-control" name="addTaskAsignee">  
+                                    <select id="add_taskAsignee" class="form-control" name="addTaskAsignee">
                                         <option value="" selected>Select task asignee</option>
                                         <?php
-                                            $projectID = htmlspecialchars($_GET['id']); // get id from URL
+                                            // $projectID = htmlspecialchars($_GET['id']); // get id from URL
                                             $query2 = "SELECT * FROM project_members 
                                                         INNER JOIN users ON project_members.user_id = users.user_id 
                                                         WHERE project_id=$projectID";
@@ -403,12 +478,13 @@
                                             if($runQuery2){
                                                 foreach($runQuery2 as $row2){
                                         ?>
-                                            <option value="<?php echo $row2['user_id'] ?>"><?php echo $row2['user_name'] ?></option>
+                                        <option value="<?php echo $row2['user_id'] ?>"><?php echo $row2['user_name'] ?>
+                                        </option>
                                         <?php
                                                 }
                                             }
-                                        ?> 
-                                        
+                                        ?>
+
                                     </select>
                                     <p class="m-0 p-2 text-danger addTaskAsigneeMsg"></p>
                                 </div>
@@ -488,7 +564,8 @@
                         <form role="form">
                             <div class="form-row">
                                 <input type="hidden" name="insertMember_id" id="insertMember_id">
-                                <input type="hidden" name="add_member_projectID" id="add_member_projectID" value="<?php echo $_GET['id']; ?>">
+                                <input type="hidden" name="add_member_projectID" id="add_member_projectID"
+                                    value="<?php echo $_GET['id']; ?>">
                                 <div class="form-group col-md-12 m-0">
                                     <label for="inputTaskTitle">Email:</label>
                                     <input type="email" class="form-control" name="addMemberEmail" id="add_MemberEmail"

@@ -12,7 +12,14 @@
 			<div class="dropdown">
 				<a class="btn btn-outline-light dropdown-toggle" href="#" role="button" id="dropdownMenuLink"
 					data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-					<i class="fas fa-user"></i>&nbsp; <?php echo $_SESSION['user_name']; ?>
+					<i class="fas fa-user"></i>&nbsp; 
+					<?php
+						if(strlen($_SESSION['user_name']) > 11){
+							echo substr($_SESSION['user_name'], 0, 11).'...';
+						}else{
+							echo $_SESSION['user_name'];
+						}
+					?>
 				</a>
 				<div class="dropdown-menu shadow bg-white rounded" aria-labelledby="dropdownMenuLink">
 					<!-- <a class="dropdown-item" href="/FYP/dashboard.php" target="_blank"><i class="fab fa-elementor"
