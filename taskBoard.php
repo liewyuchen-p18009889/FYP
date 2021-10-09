@@ -68,7 +68,53 @@
 
         //     return projectID;
         // }
+        // add members START
+        function submitAddMember() {
+            var projectID = $('#add_member_projectID').val();
+            var memberEmail = $('#add_MemberEmail').val();
 
+            if (memberEmail.trim() == '') {
+                $('.addMemberMsg').text('Email is required!');
+                $('#add_MemberEmail').focus();
+                return false;
+            } else {
+                $.ajax({
+                    type: "POST",
+                    url: "/FYP/addMemberData.php",
+                    data: "addMemberForm=1&addMemberEmail=" + memberEmail + "&projectID=" + projectID,
+                    beforeSend: function () {
+                        $('.btnAddMember').attr("disabled", "disabled");
+                        $('.modal-body').css('opacity', '.5');
+                    },
+                    success: function (response) {
+                        if (response == 'success') {
+                            $('#add_MemberEmail').val('');
+                            swal({
+                                title: "Member invited successfully!",
+                                icon: "success",
+                            }).then((result) => {
+                                location.reload();
+                            });
+                        } else if (response == 'fail1') {
+                            $(function () {
+                                swal("No such user!", "", "warning");
+                            });
+                        } else if (response == 'fail2') {
+                            $(function () {
+                                swal("User is already a member!", "", "warning");
+                            });
+                        } else {
+                            $(function () {
+                                swal("Something went wrong!", "", "warning");
+                            });
+                        }
+                        $('.btnAddMember').removeAttr("disabled");
+                        $('.modal-body').css('opacity', '');
+                    }
+                });
+            }
+        }
+        // add members END
         // add tasks START
         function submitAddTask() {
             var inputErrorArr = []; // to store errors of input field
@@ -166,53 +212,20 @@
             }
         }
         // add tasks END
-        // add members START
-        function submitAddMember() {
-            var projectID = $('#add_member_projectID').val();
-            var memberEmail = $('#add_MemberEmail').val();
 
-            if (memberEmail.trim() == '') {
-                $('.addMemberMsg').text('Email is required!');
-                $('#add_MemberEmail').focus();
-                return false;
-            } else {
-                $.ajax({
-                    type: "POST",
-                    url: "/FYP/addMemberData.php",
-                    data: "addMemberForm=1&addMemberEmail=" + memberEmail + "&projectID=" + projectID,
-                    beforeSend: function () {
-                        $('.btnAddMember').attr("disabled", "disabled");
-                        $('.modal-body').css('opacity', '.5');
-                    },
-                    success: function (response) {
-                        if (response == 'success') {
-                            $('#add_MemberEmail').val('');
-                            swal({
-                                title: "Member invited successfully!",
-                                icon: "success",
-                            }).then((result) => {
-                                location.reload();
-                            });
-                        } else if (response == 'fail1') {
-                            $(function () {
-                                swal("No such user!", "", "warning");
-                            });
-                        } else if (response == 'fail2') {
-                            $(function () {
-                                swal("User is already a member!", "", "warning");
-                            });
-                        } else {
-                            $(function () {
-                                swal("Something went wrong!", "", "warning");
-                            });
-                        }
-                        $('.btnAddMember').removeAttr("disabled");
-                        $('.modal-body').css('opacity', '');
-                    }
-                });
-            }
+        // view tasks START
+        function viewTaskDetails() {
+            var taskID = $('#viewTaskID').val();
+            console.log(taskID);
+            $('#get_viewTaskID').val(taskID);
         }
-        // add members END
+        // view tasks END
+
+        // edit tasks START
+        function submitUpdTask() {
+
+        }
+        // edit tasks END
     </script>
 </head>
 
@@ -235,8 +248,12 @@
             }
         }
 
-        function formatEndDate($endDate){
-            echo date('dM', strtotime($endDate));
+        function formatDate($date){
+            echo date('dM', strtotime($date));
+        }
+
+        function formatDate2($date){
+            echo date('d/m/Y', strtotime($date));
         }
     ?>
     <div class="container-fluid" style="padding: 30px 10px;">
@@ -278,11 +295,9 @@
                     <h5 class="d-flex justify-content-center text-info mt-3 mb-3">TO DO</h5>
                     <?php
                         $projectID = $_GET['id'];
-                        // $query3 = "SELECT * FROM tasks 
-                        //             WHERE task_project=$projectID AND task_status='toDo'";
                         $query3 = "SELECT * FROM tasks 
                                     INNER JOIN users ON tasks.task_asignee=users.user_id 
-                                    WHERE task_project=$projectID AND task_status ='toDo'";
+                                    WHERE task_project=$projectID AND task_status='To Do'";
                         $runQuery3 = mysqli_query($dbc, $query3);
 
                         if($runQuery3){
@@ -290,17 +305,20 @@
                     ?>
                     <div class="card bg-light mt-2 mb-2">
                         <div class="card-body p-2">
-                            <button type="button" class="btn btn-link text-info" data-toggle="modal" data-target="#updTaskModal">
+                            <button type="button" class="btn btn-link text-info btnViewTask" data-toggle="modal"
+                                data-target="#viewTaskModal<?php echo $row3['task_id']; ?>">
                                 <h4 class="card-title text-left"><?php formatTitle($row3['task_title']); ?></h4>
                             </button>
                             <div class="row ml-1 mr-1">
                                 <div class="col-6">
                                     <h6 class="card-text mb-2 text-muted">
-                                        <i class="far fa-clock"></i>&nbsp;<?php formatEndDate($row3['task_end']); ?>
+                                        <i class="far fa-clock"></i>&nbsp;<?php formatDate($row3['task_end']); ?>
                                     </h6>
                                 </div>
                                 <div class="col-6 d-flex justify-content-end">
-                                    <h6 class="text-muted"><i class="fas fa-user"></i>&nbsp;<?php formatUsername($row3['user_name']); ?></h6>
+                                    <h6 class="text-muted"><i
+                                            class="fas fa-user"></i>&nbsp;<?php formatUsername($row3['user_name']); ?>
+                                    </h6>
                                 </div>
                             </div>
                         </div>
@@ -320,7 +338,7 @@
                     <?php
                         $query4 = "SELECT * FROM tasks 
                                     INNER JOIN users ON tasks.task_asignee=users.user_id 
-                                    WHERE task_project=$projectID AND task_status ='inProgress'";
+                                    WHERE task_project=$projectID AND task_status='In Progress'";
                         $runQuery4 = mysqli_query($dbc, $query4);
 
                         if($runQuery4){
@@ -328,17 +346,20 @@
                     ?>
                     <div class="card bg-light mt-2 mb-2">
                         <div class="card-body p-2">
-                            <button type="button" class="btn btn-link text-info" data-toggle="modal" data-target="#updTaskModal">
+                            <button type="button" class="btn btn-link text-info" data-toggle="modal"
+                                data-target="#viewTaskModal<?php echo $row4['task_id']; ?>">
                                 <h4 class="card-title text-left"><?php formatTitle($row4['task_title']); ?></h4>
                             </button>
                             <div class="row ml-1 mr-1">
                                 <div class="col-6">
                                     <h6 class="card-text mb-2 text-muted">
-                                        <i class="far fa-clock"></i>&nbsp;<?php formatEndDate($row4['task_end']); ?>
+                                        <i class="far fa-clock"></i>&nbsp;<?php formatDate($row4['task_end']); ?>
                                     </h6>
                                 </div>
                                 <div class="col-6 d-flex justify-content-end">
-                                    <h6 class="text-muted"><i class="fas fa-user"></i>&nbsp;<?php formatUsername($row4['user_name']); ?></h6>
+                                    <h6 class="text-muted"><i
+                                            class="fas fa-user"></i>&nbsp;<?php formatUsername($row4['user_name']); ?>
+                                    </h6>
                                 </div>
                             </div>
                         </div>
@@ -346,7 +367,7 @@
                     <?php
                             }
                         }
-                    ?>                    
+                    ?>
                 </div>
             </div>
             <!-- 2nd column END -->
@@ -354,11 +375,11 @@
             <div
                 class="col fixWidth bg-white shadow rounded mr-2 ml-2 p-0 d-flex justify-content-center border border-info">
                 <div class="container connectedSortable" id="drag3">
-                    <h5 class="d-flex justify-content-center text-info mt-3 mb-3">TESTING</h5>
+                    <h5 class="d-flex justify-content-center text-info mt-3 mb-3">TEST</h5>
                     <?php
                         $query5 = "SELECT * FROM tasks 
                                     INNER JOIN users ON tasks.task_asignee=users.user_id 
-                                    WHERE task_project=$projectID AND task_status ='test'";
+                                    WHERE task_project=$projectID AND task_status='Test'";
                         $runQuery5 = mysqli_query($dbc, $query5);
 
                         if($runQuery5){
@@ -366,17 +387,20 @@
                     ?>
                     <div class="card bg-light mt-2 mb-2">
                         <div class="card-body p-2">
-                            <button type="button" class="btn btn-link text-info" data-toggle="modal" data-target="#updTaskModal">
+                            <button type="button" class="btn btn-link text-info" data-toggle="modal"
+                                data-target="#viewTaskModal<?php echo $row5['task_id']; ?>">
                                 <h4 class="card-title text-left"><?php formatTitle($row5['task_title']); ?></h4>
                             </button>
                             <div class="row ml-1 mr-1">
                                 <div class="col-6">
                                     <h6 class="card-text mb-2 text-muted">
-                                        <i class="far fa-clock"></i>&nbsp;<?php formatEndDate($row5['task_end']); ?>
+                                        <i class="far fa-clock"></i>&nbsp;<?php formatDate($row5['task_end']); ?>
                                     </h6>
                                 </div>
                                 <div class="col-6 d-flex justify-content-end">
-                                    <h6 class="text-muted"><i class="fas fa-user"></i>&nbsp;<?php formatUsername($row5['user_name']); ?></h6>
+                                    <h6 class="text-muted"><i
+                                            class="fas fa-user"></i>&nbsp;<?php formatUsername($row5['user_name']); ?>
+                                    </h6>
                                 </div>
                             </div>
                         </div>
@@ -384,7 +408,7 @@
                     <?php
                             }
                         }
-                    ?> 
+                    ?>
                 </div>
             </div>
             <!-- 3rd column END -->
@@ -396,7 +420,7 @@
                     <?php
                         $query6 = "SELECT * FROM tasks 
                                     INNER JOIN users ON tasks.task_asignee=users.user_id 
-                                    WHERE task_project=$projectID AND task_status ='done'";
+                                    WHERE task_project=$projectID AND task_status='Done'";
                         $runQuery6 = mysqli_query($dbc, $query6);
 
                         if($runQuery6){
@@ -404,17 +428,20 @@
                     ?>
                     <div class="card bg-light mt-2 mb-2">
                         <div class="card-body p-2">
-                            <button type="button" class="btn btn-link text-info" data-toggle="modal" data-target="#updTaskModal">
+                            <button type="button" class="btn btn-link text-info" data-toggle="modal"
+                                data-target="#viewTaskModal<?php echo $row6['task_id']; ?>">
                                 <h4 class="card-title text-left"><?php formatTitle($row6['task_title']); ?></h4>
                             </button>
                             <div class="row ml-1 mr-1">
                                 <div class="col-6">
                                     <h6 class="card-text mb-2 text-muted">
-                                        <i class="far fa-clock"></i>&nbsp;<?php formatEndDate($row6['task_end']); ?>
+                                        <i class="far fa-clock"></i>&nbsp;<?php formatDate($row6['task_end']); ?>
                                     </h6>
                                 </div>
                                 <div class="col-6 d-flex justify-content-end">
-                                    <h6 class="text-muted"><i class="fas fa-user"></i>&nbsp;<?php formatUsername($row6['user_name']); ?></h6>
+                                    <h6 class="text-muted"><i
+                                            class="fas fa-user"></i>&nbsp;<?php formatUsername($row6['user_name']); ?>
+                                    </h6>
                                 </div>
                             </div>
                         </div>
@@ -422,13 +449,49 @@
                     <?php
                             }
                         }
-                    ?> 
+                    ?>
                 </div>
             </div>
             <!-- 4th column END -->
             <!-- <div class="col-3 bg-white shadow rounded mr-1 ml-1">b</div>
             <div class="col-3 bg-white shadow rounded mr-1 ml-1">c</div> -->
         </div>
+        <!-- invite member modal START -->
+        <div class="modal fade bd-example-modal-lg" id="addMemberModal" tabindex="-1" role="dialog"
+            aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Invite Member</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <form role="form">
+                            <div class="form-row">
+                                <input type="hidden" name="insertMember_id" id="insertMember_id">
+                                <input type="hidden" name="add_member_projectID" id="add_member_projectID"
+                                    value="<?php echo $_GET['id']; ?>">
+                                <div class="form-group col-md-12 m-0">
+                                    <label for="inputTaskTitle">Email:</label>
+                                    <input type="email" class="form-control" name="addMemberEmail" id="add_MemberEmail"
+                                        aria-describedby="emailHelp" placeholder="Enter email">
+                                    <p class="m-0 p-2 text-danger addMemberMsg"></p>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <!-- <button type="submit" class="btn btn-info" name="addProjectData">Create</button> -->
+                        <button type="button" class="btn btn-info btnAddMember"
+                            onclick="submitAddMember()">Invite</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- invite member modal END -->
         <!-- add task modal START -->
         <div class="modal fade bd-example-modal-lg" id="addTaskModal" tabindex="-1" role="dialog"
             aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -492,10 +555,10 @@
                                     <label for="inputTaskStatus">Status:</label>
                                     <select id="add_taskStatus" class="form-control" name="addTaskStatus">
                                         <option value="" selected>Select task status</option>
-                                        <option value="toDo">To Do</option>
-                                        <option value="inProgress">In Progress</option>
-                                        <option value="test">Test</option>
-                                        <option value="done">Done</option>
+                                        <option value="To Do">To Do</option>
+                                        <option value="In Progress">In Progress</option>
+                                        <option value="Test">Test</option>
+                                        <option value="Done">Done</option>
                                     </select>
                                     <p class="m-0 p-2 text-danger addTaskStatusMsg"></p>
                                 </div>
@@ -518,44 +581,22 @@
             </div>
         </div>
         <!-- add task modal END -->
-        <!-- edit task modal START -->
-        <div class="modal fade bd-example-modal-lg" id="updTaskModal" tabindex="-1" role="dialog"
-            aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <!-- view task modal START -->
+        <?php
+            $query7 = "SELECT * FROM tasks 
+                        INNER JOIN users ON tasks.task_asignee=users.user_id 
+                        WHERE task_project=$projectID";
+            $runQuery7 = mysqli_query($dbc, $query7);
+
+            if($runQuery7){
+                foreach($runQuery7 as $row7){
+        ?>
+        <div class="modal fade bd-example-modal-lg" id="viewTaskModal<?php echo $row7['task_id']; ?>" tabindex="-1"
+            role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Edit Task</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form role="form">
-                            <input type="hidden" name="updateTask_id" id="updateTask_id">
-                            <div class="form-group m-0">
-                                <label for="inputTaskTitle">Task Title:</label>
-                                <input type="text" class="form-control" name="addTaskTitle" id="add_taskTitle"
-                                    aria-describedby="emailHelp" placeholder="Enter task title">
-                                <p class="m-0 p-2 text-danger statusMsg"></p>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                        <!-- <button type="submit" class="btn btn-info" name="addProjectData">Create</button> -->
-                        <button type="button" class="btn btn-info btnUpdTask" onclick="submitUpdTask()">Create</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- edit task modal END -->
-        <!-- invite member modal START -->
-        <div class="modal fade bd-example-modal-lg" id="addMemberModal" tabindex="-1" role="dialog"
-            aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Invite Member</h5>
+                        <h5 class="modal-title" id="exampleModalLabel">Task Details</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -563,28 +604,93 @@
                     <div class="modal-body">
                         <form role="form">
                             <div class="form-row">
-                                <input type="hidden" name="insertMember_id" id="insertMember_id">
-                                <input type="hidden" name="add_member_projectID" id="add_member_projectID"
-                                    value="<?php echo $_GET['id']; ?>">
+                                <!-- <input type="text" name="get_viewTaskID" id="get_viewTaskID"> -->
+                                <div class="form-group col-md-12">
+                                    <label for="inputTaskTitle">Title:</label>
+                                    <input type="text" class="form-control" name="viewTaskTitle" id="view_taskTitle"
+                                        aria-describedby="emailHelp" value="<?php echo $row7['task_title']; ?>"
+                                        readonly>
+                                    <!-- <p class="m-0 p-2 text-danger addTaskTitleMsg"></p> -->
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="inputTaskStart">Start date:</label>
+                                    <input type="text" class="form-control" name="viewTaskStart" id="view_taskStart"
+                                        value="<?php echo formatDate2($row7['task_start']); ?>" readonly>
+                                    <!-- <p class="m-0 p-2 text-danger addTaskStartMsg"></p> -->
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="inputTaskEnd">End date:</label>
+                                    <input type="text" class="form-control" name="viewTaskEnd" id="view_taskEnd"
+                                        value="<?php echo formatDate2($row7['task_end']); ?>" readonly>
+                                    <!-- <p class="m-0 p-2 text-danger addTaskEndMsg"></p> -->
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="inputTaskAsignee">Asignee:</label>
+                                    <input type="text" class="form-control" name="viewTaskAsignee" id="view_taskAsignee"
+                                        value="<?php echo $row7['user_name']; ?>" readonly>
+                                    <!-- <p class="m-0 p-2 text-danger addTaskAsigneeMsg"></p> -->
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label for="inputTaskStatus">Status:</label>
+                                    <input type="text" class="form-control" name="viewTaskStatus" id="view_taskStatus"
+                                        value="<?php echo $row7['task_status']; ?>" readonly>
+                                    <!-- <p class="m-0 p-2 text-danger addTaskStatusMsg"></p> -->
+                                </div>
                                 <div class="form-group col-md-12 m-0">
-                                    <label for="inputTaskTitle">Email:</label>
-                                    <input type="email" class="form-control" name="addMemberEmail" id="add_MemberEmail"
-                                        aria-describedby="emailHelp" placeholder="Enter email">
-                                    <p class="m-0 p-2 text-danger addMemberMsg"></p>
+                                    <label for="inputTaskDescrp">Description:</label>
+                                    <!-- <input type="text" class="form-control" name="addTaskDescrp" id="add_taskDescrp"
+                                            aria-describedby="emailHelp" placeholder="Enter task description"> -->
+                                    <textarea class="form-control" name="viewTaskDescrp" id="view_taskDescrp" rows="10"
+                                        readonly><?php echo strip_tags($row7['task_description']); ?></textarea>
+                                    <!-- <p class="m-0 p-2 text-danger addTaskDescrpMsg"></p> -->
                                 </div>
                             </div>
                         </form>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                        <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button> -->
                         <!-- <button type="submit" class="btn btn-info" name="addProjectData">Create</button> -->
-                        <button type="button" class="btn btn-info btnAddMember"
-                            onclick="submitAddMember()">Invite</button>
+                        <!-- <button type="button" class="btn btn-info btnUpdTask" onclick="submitUpdTask()">Save</button> -->
+                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal"
+                            data-dismiss="modal">
+                            Delete
+                        </button>
+                        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModal"
+                            data-dismiss="modal">
+                            Edit
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
-        <!-- invite member modal END -->
+        <?php
+                }
+            }
+        ?>
+        <!-- view task modal END -->
+        <!-- modal test -->
+        <!-- Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        ...
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="button" class="btn btn-primary">Save changes</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- modal test -->
     </div>
     <!-- </div> -->
     <script type="text/javascript">
