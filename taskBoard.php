@@ -217,6 +217,19 @@
 
 <body class="bg-light">
     <?php include 'header.php'; 
+
+        // check if user is the project's member so that can access to the project's taskboard START
+        $query7 = "SELECT * FROM project_members WHERE user_id={$_SESSION['user_id']} AND project_id={$_GET['id']}";
+        $runQuery7 = mysqli_query($dbc, $query7);
+        $countQuery7 = mysqli_num_rows($runQuery7);
+        
+        if($countQuery7 == 0){
+            echo '<script language="javascript">
+                    alert("Invalid URL!");
+                    window.location.href="/FYP/projectList.php";
+                    </script>';
+        }
+        // check if user is the project member so that can access to the project's taskboard END
     
         function formatTitle($title){
             if(strlen($title) > 24){
@@ -281,7 +294,8 @@
                     ?>
                     <div class="card bg-light mt-2 mb-2">
                         <div class="card-body p-2">
-                            <a href="/FYP/taskDetails.php?projectID=<?php echo $row3['task_project'] ?>&taskID=<?php echo $row3['task_id'] ?>" class="btn btn-link text-info">
+                            <a href="/FYP/taskDetails.php?projectID=<?php echo $row3['task_project'] ?>&taskID=<?php echo $row3['task_id'] ?>"
+                                class="btn btn-link text-info">
                                 <h4 class="card-title text-left"><?php formatTitle($row3['task_title']); ?></h4>
                             </a>
                             <div class="row ml-1 mr-1">
@@ -321,7 +335,8 @@
                     ?>
                     <div class="card bg-light mt-2 mb-2">
                         <div class="card-body p-2">
-                            <a href="/FYP/taskDetails.php?projectID=<?php echo $row4['task_project'] ?>&taskID=<?php echo $row4['task_id'] ?>" class="btn btn-link text-info">
+                            <a href="/FYP/taskDetails.php?projectID=<?php echo $row4['task_project'] ?>&taskID=<?php echo $row4['task_id'] ?>"
+                                class="btn btn-link text-info">
                                 <h4 class="card-title text-left"><?php formatTitle($row4['task_title']); ?></h4>
                             </a>
                             <div class="row ml-1 mr-1">
@@ -361,7 +376,8 @@
                     ?>
                     <div class="card bg-light mt-2 mb-2">
                         <div class="card-body p-2">
-                            <a href="/FYP/taskDetails.php?projectID=<?php echo $row5['task_project'] ?>&taskID=<?php echo $row5['task_id'] ?>" class="btn btn-link text-info">
+                            <a href="/FYP/taskDetails.php?projectID=<?php echo $row5['task_project'] ?>&taskID=<?php echo $row5['task_id'] ?>"
+                                class="btn btn-link text-info">
                                 <h4 class="card-title text-left"><?php formatTitle($row5['task_title']); ?></h4>
                             </a>
                             <div class="row ml-1 mr-1">
@@ -401,7 +417,8 @@
                     ?>
                     <div class="card bg-light mt-2 mb-2">
                         <div class="card-body p-2">
-                            <a href="/FYP/taskDetails.php?projectID=<?php echo $row6['task_project'] ?>&taskID=<?php echo $row6['task_id'] ?>" class="btn btn-link text-info">
+                            <a href="/FYP/taskDetails.php?projectID=<?php echo $row6['task_project'] ?>&taskID=<?php echo $row6['task_id'] ?>"
+                                class="btn btn-link text-info">
                                 <h4 class="card-title text-left"><?php formatTitle($row6['task_title']); ?></h4>
                             </a>
                             <div class="row ml-1 mr-1">

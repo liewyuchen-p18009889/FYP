@@ -77,6 +77,31 @@
 <body class="bg-light">
     <?php include 'header.php'; 
 
+        // check if the project's member so that can access to the project's task details START
+        $query2 = "SELECT * FROM tasks WHERE task_project={$_GET['projectID']} AND task_id={$_GET['taskID']}";
+        $runQuery2 = mysqli_query($dbc, $query2);
+        $countQuery2 = mysqli_num_rows($runQuery2);
+
+        if($countQuery2 == 0){
+            echo '<script language="javascript">
+                    alert("Invalid URL! No such project or task!");
+                    window.location.href="/FYP/projectList.php";
+                    </script>';
+        }else{
+            $query3 = "SELECT * FROM project_members WHERE 
+                        user_id={$_SESSION['user_id']} AND project_id={$_GET['projectID']}";
+            $runQuery3 = mysqli_query($dbc, $query3);
+            $countQuery3 = mysqli_num_rows($runQuery3);
+
+            if($countQuery3 == 0){
+                echo '<script language="javascript">
+                    alert("You are not a member of this project!");
+                    window.location.href="/FYP/projectList.php";
+                    </script>';
+            }
+        }
+        // check if the project's member so that can access to the project's task details END
+
         function formatDate2($date){
             echo date('d/m/Y', strtotime($date));
         }
