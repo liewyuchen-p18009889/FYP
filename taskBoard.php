@@ -16,9 +16,9 @@
             text-align: center;
         }
 
-        .swal-button {
+        /* .swal-button {
             background-color: #3AAFA9;
-        }
+        } */
 
         .swal-footer {
             text-align: center;
@@ -212,20 +212,6 @@
             }
         }
         // add tasks END
-
-        // view tasks START
-        function viewTaskDetails() {
-            var taskID = $('#viewTaskID').val();
-            console.log(taskID);
-            $('#get_viewTaskID').val(taskID);
-        }
-        // view tasks END
-
-        // edit tasks START
-        function submitUpdTask() {
-
-        }
-        // edit tasks END
     </script>
 </head>
 
@@ -250,11 +236,7 @@
 
         function formatDate($date){
             echo date('dM', strtotime($date));
-        }
-
-        function formatDate2($date){
-            echo date('d/m/Y', strtotime($date));
-        }
+        }   
     ?>
     <div class="container-fluid" style="padding: 30px 10px;">
         <div class="row" style="margin: 0 35px;">
@@ -278,12 +260,6 @@
                     <i class="fas fa-plus" style="font-size: 20px;"></i>&nbsp;Create Task
                 </button>
             </div>
-            <!-- <div class="col-6 d-flex justify-content-end"></div> -->
-            <!-- <div class="col-6 d-flex justify-content-end">
-                <button class="btn btn-primary" type="button" style="background: #3AAFA9;" data-toggle="modal"
-                    data-target="#addProjectModal"><i class="fas fa-plus" style="font-size: 20px;"></i>&nbsp;Create
-                    Task</button>
-            </div> -->
         </div>
     </div>
     <div class="container-fluid mb-3">
@@ -305,10 +281,9 @@
                     ?>
                     <div class="card bg-light mt-2 mb-2">
                         <div class="card-body p-2">
-                            <button type="button" class="btn btn-link text-info btnViewTask" data-toggle="modal"
-                                data-target="#viewTaskModal<?php echo $row3['task_id']; ?>">
+                            <a href="/FYP/taskDetails.php?projectID=<?php echo $row3['task_project'] ?>&taskID=<?php echo $row3['task_id'] ?>" class="btn btn-link text-info">
                                 <h4 class="card-title text-left"><?php formatTitle($row3['task_title']); ?></h4>
-                            </button>
+                            </a>
                             <div class="row ml-1 mr-1">
                                 <div class="col-6">
                                     <h6 class="card-text mb-2 text-muted">
@@ -346,10 +321,9 @@
                     ?>
                     <div class="card bg-light mt-2 mb-2">
                         <div class="card-body p-2">
-                            <button type="button" class="btn btn-link text-info" data-toggle="modal"
-                                data-target="#viewTaskModal<?php echo $row4['task_id']; ?>">
+                            <a href="/FYP/taskDetails.php?projectID=<?php echo $row4['task_project'] ?>&taskID=<?php echo $row4['task_id'] ?>" class="btn btn-link text-info">
                                 <h4 class="card-title text-left"><?php formatTitle($row4['task_title']); ?></h4>
-                            </button>
+                            </a>
                             <div class="row ml-1 mr-1">
                                 <div class="col-6">
                                     <h6 class="card-text mb-2 text-muted">
@@ -387,10 +361,9 @@
                     ?>
                     <div class="card bg-light mt-2 mb-2">
                         <div class="card-body p-2">
-                            <button type="button" class="btn btn-link text-info" data-toggle="modal"
-                                data-target="#viewTaskModal<?php echo $row5['task_id']; ?>">
+                            <a href="/FYP/taskDetails.php?projectID=<?php echo $row5['task_project'] ?>&taskID=<?php echo $row5['task_id'] ?>" class="btn btn-link text-info">
                                 <h4 class="card-title text-left"><?php formatTitle($row5['task_title']); ?></h4>
-                            </button>
+                            </a>
                             <div class="row ml-1 mr-1">
                                 <div class="col-6">
                                     <h6 class="card-text mb-2 text-muted">
@@ -428,10 +401,9 @@
                     ?>
                     <div class="card bg-light mt-2 mb-2">
                         <div class="card-body p-2">
-                            <button type="button" class="btn btn-link text-info" data-toggle="modal"
-                                data-target="#viewTaskModal<?php echo $row6['task_id']; ?>">
+                            <a href="/FYP/taskDetails.php?projectID=<?php echo $row6['task_project'] ?>&taskID=<?php echo $row6['task_id'] ?>" class="btn btn-link text-info">
                                 <h4 class="card-title text-left"><?php formatTitle($row6['task_title']); ?></h4>
-                            </button>
+                            </a>
                             <div class="row ml-1 mr-1">
                                 <div class="col-6">
                                     <h6 class="card-text mb-2 text-muted">
@@ -581,116 +553,6 @@
             </div>
         </div>
         <!-- add task modal END -->
-        <!-- view task modal START -->
-        <?php
-            $query7 = "SELECT * FROM tasks 
-                        INNER JOIN users ON tasks.task_asignee=users.user_id 
-                        WHERE task_project=$projectID";
-            $runQuery7 = mysqli_query($dbc, $query7);
-
-            if($runQuery7){
-                foreach($runQuery7 as $row7){
-        ?>
-        <div class="modal fade bd-example-modal-lg" id="viewTaskModal<?php echo $row7['task_id']; ?>" tabindex="-1"
-            role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Task Details</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <form role="form">
-                            <div class="form-row">
-                                <!-- <input type="text" name="get_viewTaskID" id="get_viewTaskID"> -->
-                                <div class="form-group col-md-12">
-                                    <label for="inputTaskTitle">Title:</label>
-                                    <input type="text" class="form-control" name="viewTaskTitle" id="view_taskTitle"
-                                        aria-describedby="emailHelp" value="<?php echo $row7['task_title']; ?>"
-                                        readonly>
-                                    <!-- <p class="m-0 p-2 text-danger addTaskTitleMsg"></p> -->
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label for="inputTaskStart">Start date:</label>
-                                    <input type="text" class="form-control" name="viewTaskStart" id="view_taskStart"
-                                        value="<?php echo formatDate2($row7['task_start']); ?>" readonly>
-                                    <!-- <p class="m-0 p-2 text-danger addTaskStartMsg"></p> -->
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label for="inputTaskEnd">End date:</label>
-                                    <input type="text" class="form-control" name="viewTaskEnd" id="view_taskEnd"
-                                        value="<?php echo formatDate2($row7['task_end']); ?>" readonly>
-                                    <!-- <p class="m-0 p-2 text-danger addTaskEndMsg"></p> -->
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label for="inputTaskAsignee">Asignee:</label>
-                                    <input type="text" class="form-control" name="viewTaskAsignee" id="view_taskAsignee"
-                                        value="<?php echo $row7['user_name']; ?>" readonly>
-                                    <!-- <p class="m-0 p-2 text-danger addTaskAsigneeMsg"></p> -->
-                                </div>
-                                <div class="form-group col-md-6">
-                                    <label for="inputTaskStatus">Status:</label>
-                                    <input type="text" class="form-control" name="viewTaskStatus" id="view_taskStatus"
-                                        value="<?php echo $row7['task_status']; ?>" readonly>
-                                    <!-- <p class="m-0 p-2 text-danger addTaskStatusMsg"></p> -->
-                                </div>
-                                <div class="form-group col-md-12 m-0">
-                                    <label for="inputTaskDescrp">Description:</label>
-                                    <!-- <input type="text" class="form-control" name="addTaskDescrp" id="add_taskDescrp"
-                                            aria-describedby="emailHelp" placeholder="Enter task description"> -->
-                                    <textarea class="form-control" name="viewTaskDescrp" id="view_taskDescrp" rows="10"
-                                        readonly><?php echo strip_tags($row7['task_description']); ?></textarea>
-                                    <!-- <p class="m-0 p-2 text-danger addTaskDescrpMsg"></p> -->
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <!-- <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button> -->
-                        <!-- <button type="submit" class="btn btn-info" name="addProjectData">Create</button> -->
-                        <!-- <button type="button" class="btn btn-info btnUpdTask" onclick="submitUpdTask()">Save</button> -->
-                        <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#exampleModal"
-                            data-dismiss="modal">
-                            Delete
-                        </button>
-                        <button type="button" class="btn btn-info" data-toggle="modal" data-target="#exampleModal"
-                            data-dismiss="modal">
-                            Edit
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <?php
-                }
-            }
-        ?>
-        <!-- view task modal END -->
-        <!-- modal test -->
-        <!-- Modal -->
-        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
-            aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        ...
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                        <button type="button" class="btn btn-primary">Save changes</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <!-- modal test -->
     </div>
     <!-- </div> -->
     <script type="text/javascript">

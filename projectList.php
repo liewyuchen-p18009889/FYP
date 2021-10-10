@@ -15,9 +15,9 @@
             text-align: center;
         }
 
-        .swal-button {
+        /* .swal-button {
             background-color: #3AAFA9;
-        }
+        } */
 
         .swal-footer {
             text-align: center;
@@ -92,8 +92,6 @@
                     return $(this).text();
                 }).get();
 
-                // console.log(data);
-
                 var id = $(this).closest("tr").find('.updProjectID').val();
                 var title = data[0].trim();
 
@@ -150,7 +148,7 @@
         // }
         // delete project END
 
-        // Swal delete project START
+        // delete project START
         $(document).ready(function () {
             $('.btnDel').click(function (e) {
                 e.preventDefault();
@@ -188,7 +186,7 @@
                     });
             });
         });
-        // Swal delete project START
+        // delete project START
     </script>
 </head>
 
