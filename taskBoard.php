@@ -186,7 +186,7 @@
                         if (response == 'success') {
                             // $('#add_MemberEmail').val('');
                             swal({
-                                title: "Task added successfully!",
+                                title: "Task created successfully!",
                                 icon: "success",
                             }).then((result) => {
                                 location.reload();

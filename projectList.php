@@ -173,13 +173,22 @@
                                     "del_id": delProID,
                                 },
                                 success: function (response) {
-                                    console.log(response);
-                                    swal({
-                                        title: "Project deleted successfully!",
-                                        icon: "success",
-                                    }).then((result) => {
-                                        location.reload();
-                                    });
+                                    console.log("swal del response: " + response);
+                                    if (response == 'success') {
+                                        swal({
+                                            title: "Project deleted successfully!",
+                                            icon: "success",
+                                        }).then((result) => {
+                                            location.reload();
+                                        });
+                                    } else if (response == 'fail') {
+                                        swal({
+                                            title: "Failed to delete project!",
+                                            icon: "warning",
+                                        }).then((result) => {
+                                            location.reload();
+                                        });
+                                    }
                                 }
                             });
                         }
