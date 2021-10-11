@@ -117,7 +117,7 @@
         // add members END
         // add tasks START
         function submitAddTask() {
-            var inputErrorArr = []; // to store errors of input field
+            var inputErrorArr = []; // to store error numbers of input field
             var projectID = $('#add_task_projectID').val();
             var taskTitle = $('#add_taskTitle').val();
             var taskStart = $('#add_taskStart').val();
@@ -128,7 +128,7 @@
 
             if (taskTitle.trim() == '') {
                 $('.addTaskTitleMsg').text('Title is required!');
-                $('#add_MemberEmail').focus();
+                $('#add_taskTitle').focus();
                 inputErrorArr.push(1);
             }
             if (taskStart.trim() == '') {
@@ -254,7 +254,7 @@
     <div class="container-fluid" style="padding: 30px 10px;">
         <div class="row" style="margin: 0 35px;">
             <div class="col-md-6 col-xs-12 p-0">
-                <h3 class="text-info"><span style="cursor:pointer" onclick="openNav()">&#9776;</span> Task Board</h3>
+                <h3 class="text-info"><span style="cursor:pointer" onclick="openNav()"><i class="fas fa-bars"></i></span> Task Board</h3>
             </div>
             <div class="col-md-6 col-xs-12 p-0 d-flex justify-content-end">
                 <?php
