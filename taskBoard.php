@@ -38,36 +38,111 @@
     <title>UTask | Task Board</title>
     <!-- drag START -->
     <script>
-        $(function () {
-            $("#drag1, #drag2, #drag3, #drag4").sortable({
-                connectWith: ".connectedSortable"
-            }).disableSelection();
+        $(document).ready(function () {
+            $('#drag1').sortable({
+                connectWith: '#drag2, #drag3, #drag4',
+                update: function(event, ui){
+                    var id = $(ui.item).attr('id');
+                    var status = this.id;
+
+                    $.ajax({
+                        type: "GET",
+                        url: "/FYP/updTaskboardData.php",
+                        data: {
+                            'id': id,
+                            'status': status
+                        },
+                        success: function (response) {
+                            swal({
+                                title: "Task updated successfully!",
+                                icon: "success",
+                                timer: 2000,
+                            })
+                            console.log("Response:\n"+response);
+                        }
+                    });
+                }
+            });
+
+            $('#drag2').sortable({
+                connectWith: '#drag1, #drag3, #drag4',
+                update: function(event, ui){
+                    var id = $(ui.item).attr('id');
+                    var status = this.id;
+                    
+                    $.ajax({
+                        type: "GET",
+                        url: "/FYP/updTaskboardData.php",
+                        data: {
+                            'id': id,
+                            'status': status
+                        },
+                        success: function (response) {
+                            swal({
+                                title: "Task updated successfully!",
+                                icon: "success",
+                                timer: 2000,
+                            })
+                            console.log("Response:\n"+response);
+                        }
+                    });
+                }
+            });
+
+            $('#drag3').sortable({
+                connectWith: '#drag1, #drag2, #drag4',
+                update: function(event, ui){
+                    var id = $(ui.item).attr('id');
+                    var status = this.id;
+                    
+                    $.ajax({
+                        type: "GET",
+                        url: "/FYP/updTaskboardData.php",
+                        data: {
+                            'id': id,
+                            'status': status
+                        },
+                        success: function (response) {
+                            swal({
+                                title: "Task updated successfully!",
+                                icon: "success",
+                                timer: 2000,
+                            })
+                            console.log("Response:\n"+response);
+                        }
+                    });
+                }
+            });
+
+            $('#drag4').sortable({
+                connectWith: '#drag1, #drag2, #drag3',
+                update: function(event, ui){
+                    var id = $(ui.item).attr('id');
+                    var status = this.id;
+                    
+                    $.ajax({
+                        type: "GET",
+                        url: "/FYP/updTaskboardData.php",
+                        data: {
+                            'id': id,
+                            'status': status
+                        },
+                        success: function (response) {
+                            swal({
+                                title: "Task updated successfully!",
+                                icon: "success",
+                                timer: 2000,
+                            })
+                            console.log("Response:\n"+response);
+                        }
+                    });
+                }
+            });
         });
     </script>
     <!-- drag END -->
-    <!-- <script type="text/javascript">
-        new Sortable(document.elementById('drag1'), {
-            group: 'shared',
-            aniamtion: 150,
-            multiDrag: true,
-            fallbackTolerance: 3
-        });
-
-        new Sortable(document.elementById('drag2'), {
-            group: 'shared',
-            aniamtion: 150,
-            ghostClass: 'bg-info'
-        });
-    </script> -->
 
     <script>
-        // function getProjectID() {
-        //     const queryString = window.location.search;
-        //     const urlParams = new URLSearchParams(queryString);
-        //     const projectID = urlParams.get('id');
-
-        //     return projectID;
-        // }
         // add members START
         function submitAddMember() {
             var projectID = $('#add_member_projectID').val();
@@ -292,7 +367,7 @@
                         if($runQuery3){
                             foreach($runQuery3 as $row3){
                     ?>
-                    <div class="card bg-light mt-2 mb-2">
+                    <div class="card bg-light mt-2 mb-2" id="<?php echo $row3['task_id']; ?>">
                         <div class="card-body p-2">
                             <a href="/FYP/taskDetails.php?projectID=<?php echo $row3['task_project'] ?>&taskID=<?php echo $row3['task_id'] ?>"
                                 class="btn btn-link text-info">
@@ -333,7 +408,7 @@
                         if($runQuery4){
                             foreach($runQuery4 as $row4){
                     ?>
-                    <div class="card bg-light mt-2 mb-2">
+                    <div class="card bg-light mt-2 mb-2" id="<?php echo $row4['task_id']; ?>">
                         <div class="card-body p-2">
                             <a href="/FYP/taskDetails.php?projectID=<?php echo $row4['task_project'] ?>&taskID=<?php echo $row4['task_id'] ?>"
                                 class="btn btn-link text-info">
@@ -374,7 +449,7 @@
                         if($runQuery5){
                             foreach($runQuery5 as $row5){
                     ?>
-                    <div class="card bg-light mt-2 mb-2">
+                    <div class="card bg-light mt-2 mb-2" id="<?php echo $row5['task_id']; ?>">
                         <div class="card-body p-2">
                             <a href="/FYP/taskDetails.php?projectID=<?php echo $row5['task_project'] ?>&taskID=<?php echo $row5['task_id'] ?>"
                                 class="btn btn-link text-info">
@@ -415,7 +490,7 @@
                         if($runQuery6){
                             foreach($runQuery6 as $row6){
                     ?>
-                    <div class="card bg-light mt-2 mb-2">
+                    <div class="card bg-light mt-2 mb-2" id="<?php echo $row6['task_id']; ?>">
                         <div class="card-body p-2">
                             <a href="/FYP/taskDetails.php?projectID=<?php echo $row6['task_project'] ?>&taskID=<?php echo $row6['task_id'] ?>"
                                 class="btn btn-link text-info">
