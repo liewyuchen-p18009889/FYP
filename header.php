@@ -4,7 +4,7 @@
 <div class="container-fluid bg-info shadow" id="header">
 	<div class="row justify-content-around">
 		<div class="col-4">
-			<a href="#"><h1 style="text-align: center; color: #feffff; margin: 20px 0;">UTask</h1></a>
+			<a href="/FYP/projectList.php"><h1 style="text-align: center; color: #feffff; margin: 20px 0;">UTask</h1></a>
 		</div>
 		<div class="col-4"></div>
 		<div class="col-4 d-flex justify-content-center align-items-center">

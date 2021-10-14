@@ -60,6 +60,8 @@
             array_push($signUpErrorsArr, "Email is required! Please try again!");
         }else if(empty($password)){
             array_push($signUpErrorsArr, "Password is required! Please try again!");
+        }else if(strlen($password) < 8){
+            array_push($signUpErrorsArr, "Password must be at least 8 characters! Please try again!");
         }else if(empty($cPassword)){
             array_push($signUpErrorsArr, "Confirm Password is required! Please try again!");
         }else if($password !== $cPassword){

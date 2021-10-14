@@ -11,6 +11,15 @@
 
     <!-- Side Menu Bar Style CSS -->
     <link rel="stylesheet" href="/FYP/sideMenuBarStyle.css">
+    <style>
+        .swal-text {
+            text-align: center;
+        }
+
+        .swal-footer {
+            text-align: center;
+        }
+    </style>
 
     <title>UTask | Dashboard</title>
 </head>
@@ -37,15 +46,25 @@
                 <h3 class="text-info"><span style="cursor:pointer" onclick="openNav()">&#9776;</span> Dashboard</h3>
             </div>
             <div class="col-6 d-flex justify-content-end">
-                <button class="btn btn-info" type="button"><i class="fas fa-file-pdf"
-                        style="font-size: 20px;"></i>&nbsp;Generate Report</button>
+                <?php
+                    // check if empty task then no show generate report button START
+                    $query7 = "SELECT * FROM tasks WHERE task_project={$_GET['id']}";
+                    $runQuery7 = mysqli_query($dbc, $query7);
+                    $countQuery7 = mysqli_num_rows($runQuery7);
+
+                    if($countQuery7 > 0){
+                        ?>
+                        <form action="/FYP/generateReport.php" method="post">
+                            <input type="hidden" name="get_projectID" value="<?php echo $_GET['id']; ?>">
+                            <button type="submit" class="btn btn-info" name="btnGeneratePDF">
+                                <i class="fas fa-file-pdf p-1" style="font-size: 20px;"></i>&nbsp;Generate Report
+                            </button>
+                        </form>
+                        <?php
+                    }
+                    // check if empty task then no show generate report button END
+                ?>
             </div>
-            <!-- <div class="col-6 d-flex justify-content-end"></div> -->
-            <!-- <div class="col-6 d-flex justify-content-end">
-                <button class="btn btn-primary" type="button" style="background: #3AAFA9;" data-toggle="modal"
-                    data-target="#addProjectModal"><i class="fas fa-plus" style="font-size: 20px;"></i>&nbsp;Create
-                    Task</button>
-            </div> -->
         </div>
     </div>
     <div class="container-fluid mb-4">
@@ -144,12 +163,12 @@
             <input type="hidden" id="count_overdue" value="<?php echo $countOverdue; ?>">
             <!-- pass value to chart.js END -->
 
-            <div class="col-7 shadow p-4 mb-5 mr-3 ml-0 bg-white rounded">
-                <h5 class="text-info">Project Status</h5>
+            <div class="col-md-7 col-sm-12 shadow p-4 mb-5 mr-md-3 bg-white rounded">
+                <h4 class="text-info">Project Status</h4>
                 <canvas id="myChart" width="100" height="55"></canvas>
             </div>
-            <div class="col-4 shadow p-4 mb-5 ml-3 mr-0 bg-white rounded">
-                <h5 class="text-info">Project Status</h5>
+            <div class="col-md-4 col-sm-12 shadow p-4 mb-5 ml-md-3 bg-white rounded">
+                <h4 class="text-info">Task Status</h4>
                 <canvas id="myChart2" width="" height=""></canvas>
             </div>
         </div>

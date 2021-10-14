@@ -56,7 +56,7 @@
         //to ensure form fields are filled properly
         if(empty($email)){
             array_push($signInErrorsArr, "Email is required! Please try again!");
-        }else if(empty($password)){ //|| $password == "d41d8cd98f00b204e9800998ecf8427e"
+        }else if(empty($password) || $password == "d41d8cd98f00b204e9800998ecf8427e"){ //to show password error msg - d41d8cd98f00b204e9800998ecf8427e
             array_push($signInErrorsArr, "Password is required! Please try again!");
         }else if(mysqli_num_rows($runQuery1) === 1){
             $row = mysqli_fetch_assoc($runQuery1); //to fetch a result row as an associative array
