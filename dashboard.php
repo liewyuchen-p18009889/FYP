@@ -43,7 +43,7 @@
     <div class="container-fluid" style="padding: 30px 10px;">
         <div class="row" style="margin: 0 35px;">
             <div class="col-6 pl-0">
-                <h3 class="text-info"><span style="cursor:pointer" onclick="openNav()">&#9776;</span> Dashboard</h3>
+                <h3 class="text-info"><span style="cursor:pointer" onclick="openNav()"><i class="fas fa-bars"></i></span> Dashboard</h3>
             </div>
             <div class="col-6 d-flex justify-content-end">
                 <?php

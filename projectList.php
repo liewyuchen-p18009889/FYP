@@ -375,7 +375,6 @@
                                 value="<?php echo $row3['project_id']; ?>">
                             <button type="button" class="btn btn-danger btnDel"><i class="fas fa-trash"
                                     style="font-size: 14px;"></i></button>
-
                             <!-- <a href="javascript:void(0)" class="btn btn-danger btnDelPro"><i class="fas fa-trash"
                                     style="font-size: 14px;"></i></a> -->
                         </td>

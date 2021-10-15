@@ -272,7 +272,7 @@
                                 <?php echo $row4['user_name'] ?>
                             </option>
                             <?php
-                                        }
+                                    }
                                 }
                             ?>
                         </select>
@@ -282,7 +282,6 @@
                         <label for="inputTaskStatus">Status:</label>
                         <!-- <input type="text" class="form-control" name="viewTaskStatus" id="view_taskStatus"
                             value="<?php echo $row1['task_status']; ?>" readonly> -->
-
                         <select class="form-control" name="viewTaskStatus" id="view_taskStatus" disabled>
                             <option value="To Do" <?php if($row1['task_status']=="To Do") echo 'selected'; ?>>To Do
                             </option>
@@ -299,7 +298,7 @@
                         <label for="inputTaskDescrp">Description:</label>
                         <!-- <input type="text" class="form-control" name="addTaskDescrp" id="add_taskDescrp"
                                             aria-describedby="emailHelp" placeholder="Enter task description"> -->
-                        <textarea class="form-control" name="viewTaskDescrp" id="view_taskDescrp"><?php echo strip_tags($row1['task_description']); ?></textarea>
+                        <textarea class="form-control" name="viewTaskDescrp" id="view_taskDescrp"><?php echo $row1['task_description']; ?></textarea>
                         <p class="m-0 p-2 text-danger viewTaskDescrpMsg"></p>
                     </div>
                     <div class="form-group col-md-12 m-0 d-flex justify-content-end">

@@ -338,7 +338,6 @@
                 $runQuery1 = mysqli_query($dbc, $query1);
 
                 if(mysqli_num_rows($runQuery1) === 1){
-                    $row = mysqli_fetch_assoc($runQuery1); //to fetch a result row as an associative array
                 ?>
                 <button class="btn btn-info mr-1" type="button" data-toggle="modal" data-target="#addMemberModal">
                     <i class="fa fa-user-plus" style="font-size: 20px;"></i>&nbsp;Invite Member

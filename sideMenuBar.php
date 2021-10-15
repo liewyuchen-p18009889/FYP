@@ -5,7 +5,15 @@
     <a href="/FYP/dashboard.php?id=<?php echo $_GET['id'] ?>">Dashboard</a>
     <a href="/FYP/taskBoard.php?id=<?php echo $_GET['id'] ?>">Task Board</a>
     <a href="#">Calendar</a>
-    <a href="#">Manage Members</a>
+    <?php
+        $email = $_SESSION['user_email'];
+        $query1 = "SELECT * FROM users WHERE user_email='$email' AND isProjectManager='1'";
+        $runQuery1 = mysqli_query($dbc, $query1);
+
+        if(mysqli_num_rows($runQuery1) === 1){
+    ?>
+        <a href="/FYP/manageMembers.php?id=<?php echo $_GET['id'] ?>">Manage Members</a>
+    <?php } ?>
 </div>
 <script>
     function openNav() {
