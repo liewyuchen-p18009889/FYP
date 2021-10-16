@@ -4,7 +4,7 @@
     <div class="dropdown-divider"></div>
     <a href="/FYP/dashboard.php?id=<?php echo $_GET['id'] ?>">Dashboard</a>
     <a href="/FYP/taskBoard.php?id=<?php echo $_GET['id'] ?>">Task Board</a>
-    <a href="#">Calendar</a>
+    <a href="/FYP/calendar.php?id=<?php echo $_GET['id'] ?>">Calendar</a>
     <?php
         $email = $_SESSION['user_email'];
         $query1 = "SELECT * FROM users WHERE user_email='$email' AND isProjectManager='1'";

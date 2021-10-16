@@ -11,10 +11,11 @@
         $taskAsignee = $_POST['viewTaskAsignee'];
         $taskStatus = $_POST['viewTaskStatus'];
         $taskDescrp = $_POST['viewTaskDescrp'];
+        $time = 'T23:59';
     }
     
     $query = "UPDATE tasks SET task_title='$taskTitle', task_start='$taskStart',
-                task_end='$taskEnd', task_asignee='$taskAsignee',
+                task_end='$taskEnd$time', task_asignee='$taskAsignee',
                 task_status='$taskStatus', task_description='$taskDescrp',
                 updated_at=NOW() 
                 WHERE task_project='$projectID' AND task_id='$taskID'";
