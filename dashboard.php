@@ -101,6 +101,22 @@
                 </div>
             </div>
             <!-- in progress tasks END -->
+            <!-- test tasks START -->
+            <div class="card shadow border-warning">
+                <div class="card-body">
+                    <h2 class="card-text text-center">Test</h2>
+                    <h1 class="card-text text-center text-warning"><span class="counter">
+                        <?php 
+                            $query6 = "SELECT * FROM tasks WHERE task_project='{$_GET['id']}' AND task_status='Test'";
+                            $runQuery6 = mysqli_query($dbc, $query6);
+                            $countTest = mysqli_num_rows($runQuery6);
+
+                            echo $countTest;
+                        ?>
+                        </span></h1>
+                </div>
+            </div>
+            <!-- test tasks END -->
             <!-- completed tasks START -->
             <div class="card shadow border-success">
                 <div class="card-body">
@@ -117,28 +133,6 @@
                 </div>
             </div>
             <!-- completed tasks END -->
-            <!-- overdue tasks START -->
-            <div class="card shadow border-danger">
-                <div class="card-body">
-                    <h2 class="card-text text-center">Overdue</h2>
-                    <h1 class="card-text text-center text-danger"><span class="counter">
-                            <?php 
-                            $query5 = "SELECT * FROM tasks WHERE task_project='{$_GET['id']}' AND task_status!='Done'";
-                            $runQuery5 = mysqli_query($dbc, $query5);
-                            $todayDate = date("Y-m-d");
-                            $countOverdue = 0;
-                            
-                            foreach($runQuery5 as $row5){
-                                if($todayDate > $row5['task_end']){
-                                    $countOverdue++;
-                                }
-                            }
-                            echo $countOverdue;
-                        ?>
-                        </span></h1>
-                </div>
-            </div>
-            <!-- overdue tasks END -->
         </div>
         <div class="row d-flex justify-content-center">
             <!-- <div class="col-3 shadow p-4 mb-5 mr-3 bg-white rounded"></div>
@@ -149,10 +143,6 @@
                 $query5 = "SELECT * FROM tasks WHERE task_project='{$_GET['id']}' AND task_status='To Do'";
                 $runQuery5 = mysqli_query($dbc, $query5);
                 $countToDo = mysqli_num_rows($runQuery5);
-
-                $query6 = "SELECT * FROM tasks WHERE task_project='{$_GET['id']}' AND task_status='Test'";
-                $runQuery6 = mysqli_query($dbc, $query6);
-                $countTest = mysqli_num_rows($runQuery6);
             ?>
 
             <!-- pass value to chart.js START -->
@@ -160,7 +150,6 @@
             <input type="hidden" id="count_inProgress" value="<?php echo $countInProgress; ?>">
             <input type="hidden" id="count_test" value="<?php echo $countTest; ?>">
             <input type="hidden" id="count_done" value="<?php echo $countDone; ?>">
-            <input type="hidden" id="count_overdue" value="<?php echo $countOverdue; ?>">
             <!-- pass value to chart.js END -->
 
             <div class="col-md-7 col-sm-12 shadow p-4 mb-5 mr-md-3 bg-white rounded">
@@ -181,7 +170,6 @@
         var countInProgress = $('#count_inProgress').val();
         var countTest = $('#count_test').val();
         var countDone = $('#count_done').val();
-        var countOverdue = $('#count_overdue').val();
 
         var ctx = document.getElementById('myChart');
         var myChart = new Chart(ctx, {
@@ -230,11 +218,11 @@
                 labels: [
                     'In Progress',
                     'Completed',
-                    'Overdue'
+                    'Test'
                 ],
                 datasets: [{
                     label: 'My First Dataset',
-                    data: [countInProgress, countDone, countOverdue],
+                    data: [countInProgress, countDone, countTest],
                     backgroundColor: [
                         'rgb(255, 99, 132)',
                         'rgb(54, 162, 235)',
