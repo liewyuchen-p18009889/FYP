@@ -17,7 +17,7 @@
     $query = "UPDATE tasks SET task_title='$taskTitle', task_start='$taskStart',
                 task_end='$taskEnd$time', task_asignee='$taskAsignee',
                 task_status='$taskStatus', task_description='$taskDescrp',
-                updated_at=NOW() 
+                task_updated_at=NOW() 
                 WHERE task_project='$projectID' AND task_id='$taskID'";
 
     $runQuery = mysqli_query($dbc, $query);

@@ -8,7 +8,7 @@
     }
     
     $query = "UPDATE projects SET project_title='$projectTitle',
-    updated_at=NOW() WHERE project_id='$projectID'";
+                project_updated_at=NOW() WHERE project_id='$projectID'";
     $runQuery = mysqli_query($dbc, $query);
 
     if($runQuery){

@@ -17,7 +17,7 @@
     }
 
     $query1 = "INSERT INTO tasks (task_title, task_start, task_end, task_status, task_asignee, 
-                task_description, task_project, created_at, updated_at) 
+                task_description, task_project, task_created_at, task_updated_at) 
 			    VALUES ('$taskTitle', '$taskStart', '$taskEnd$time', '$taskStatus', '$taskAsignee',
                 '$taskDescrp', '$projectID', NOW(), NOW())";
     $runQuery1 = mysqli_query($dbc, $query1);

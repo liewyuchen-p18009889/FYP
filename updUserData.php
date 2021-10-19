@@ -13,7 +13,7 @@
         if($userName == $row4['user_name']){
             $status = 'fail3'; //nothing to update
         }else{
-            $query1 = "UPDATE users SET user_name='$userName', updated_at=NOW()
+            $query1 = "UPDATE users SET user_name='$userName', user_updated_at=NOW()
                 WHERE user_id='$userID'";
             $runQuery1 = mysqli_query($dbc, $query1);
 
@@ -35,7 +35,7 @@
                 $status = 'fail4'; //nothing to update
             }else{
                 $query3 = "UPDATE users SET user_name='$userName', user_password='$newPassword1',
-                    updated_at=NOW() WHERE user_id='$userID'";
+                    user_updated_at=NOW() WHERE user_id='$userID'";
                 $runQuery3 = mysqli_query($dbc, $query3);
 
                 $status = 'success';

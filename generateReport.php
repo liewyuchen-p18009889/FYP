@@ -47,8 +47,8 @@
                             <td>'.date('Y-m-d', strtotime($row['task_end'])).'</td>
                             <td>'.$row['task_status'].'</td>
                             <td>'.$row['user_name'].'</td>
-                            <td>'.$row['created_at'].'</td>
-                            <td>'.$row['updated_at'].'</td>
+                            <td>'.$row['task_created_at'].'</td>
+                            <td>'.$row['task_updated_at'].'</td>
                             </tr>';
         }
         $pdfData .= '</table>';

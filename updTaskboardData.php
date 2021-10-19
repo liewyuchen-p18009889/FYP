@@ -22,7 +22,7 @@
         }
     }
 
-    $query1 = "UPDATE tasks SET task_status='$taskStatus', updated_at=NOW()
+    $query1 = "UPDATE tasks SET task_status='$taskStatus', task_updated_at=NOW()
                 WHERE task_id=$taskID";
     $runQuery1 = mysqli_query($dbc, $query1);
     // echo $query1;

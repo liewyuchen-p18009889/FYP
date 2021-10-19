@@ -8,7 +8,7 @@
         $projectCreator = $_SESSION['user_id'];
     }
 
-    $query1 = "INSERT INTO projects (project_title, project_creator, created_at, updated_at) 
+    $query1 = "INSERT INTO projects (project_title, project_creator, project_created_at, project_updated_at) 
 			VALUES ('$projectTitle', '$projectCreator', NOW(), NOW())";
     $runQuery1 = mysqli_query($dbc, $query1);
     $latestprojectID = mysqli_insert_id($dbc);
