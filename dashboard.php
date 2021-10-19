@@ -22,6 +22,13 @@
     </style>
 
     <title>UTask | Dashboard</title>
+    <script type="text/javascript">
+        // member status Datatable START
+        $(document).ready(function () {
+            $('#memberStatusTable').DataTable();
+        });
+        // member status Datatable END
+    </script>
 </head>
 
 <body class="bg-light">
@@ -67,7 +74,7 @@
             </div>
         </div>
     </div>
-    <div class="container-fluid mb-4">
+    <div class="container-fluid">
         <div class="card-deck ml-3 mr-3 mb-5">
             <!-- total tasks START -->
             <div class="card shadow border-info">
@@ -162,6 +169,75 @@
             </div>
         </div>
     </div>
+    <div class="container-fluid mb-4">
+        <div class="card shadow p-4 mb-5 ml-4 mr-4 bg-white rounded" style="min-height: 516px;">
+            <h4 class="text-info">Member Status</h4>
+            <table id="memberStatusTable" class="table table-hover" style="width:100%;">
+                <thead class="bg-light">
+                    <tr>
+                        <th>Member</th>
+                        <th>Total Task</th>
+                        <th>To Do</th>
+                        <th>In Progress</th>
+                        <th>Test</th>
+                        <th>Done</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php 
+                        $query8 = "SELECT * FROM project_members
+                                    INNER JOIN users ON project_members.user_id=users.user_id
+                                    WHERE project_id={$_GET['id']}";
+                        $runQuery8 = mysqli_query($dbc, $query8);
+
+                        if($runQuery8){
+                            foreach($runQuery8 as $row8){
+                                // fetch data of total task for each member
+                                $query9 = "SELECT * FROM tasks WHERE task_project='{$_GET['id']}' 
+                                        AND task_asignee='{$row8['user_id']}'";
+                                $runQuery9 = mysqli_query($dbc, $query9);
+                                $countQuery9 = mysqli_num_rows($runQuery9);
+
+                                // fetch data of to do task for each member
+                                $query10 = "SELECT * FROM tasks WHERE task_project='{$_GET['id']}' 
+                                        AND task_asignee='{$row8['user_id']}' AND task_status='To Do'";
+                                $runQuery10 = mysqli_query($dbc, $query10);
+                                $countQuery10 = mysqli_num_rows($runQuery10);
+
+                                // fetch data of in progress task for each member
+                                $query11 = "SELECT * FROM tasks WHERE task_project='{$_GET['id']}' 
+                                        AND task_asignee='{$row8['user_id']}' AND task_status='In Progress'";
+                                $runQuery11 = mysqli_query($dbc, $query11);
+                                $countQuery11 = mysqli_num_rows($runQuery11);
+
+                                // fetch data of test task for each member
+                                $query12 = "SELECT * FROM tasks WHERE task_project='{$_GET['id']}' 
+                                        AND task_asignee='{$row8['user_id']}' AND task_status='Test'";
+                                $runQuery12 = mysqli_query($dbc, $query12);
+                                $countQuery12 = mysqli_num_rows($runQuery12);
+
+                                // fetch data of done task for each member
+                                $query13 = "SELECT * FROM tasks WHERE task_project='{$_GET['id']}' 
+                                        AND task_asignee='{$row8['user_id']}' AND task_status='Done'";
+                                $runQuery13 = mysqli_query($dbc, $query13);
+                                $countQuery13 = mysqli_num_rows($runQuery13);
+                                ?>
+                            <tr>
+                                <td><?php echo $row8['user_name']; ?></td>
+                                <td><?php echo $countQuery9; ?></td>
+                                <td><?php echo $countQuery10; ?></td>
+                                <td><?php echo $countQuery11; ?></td>
+                                <td><?php echo $countQuery12; ?></td>
+                                <td><?php echo $countQuery13; ?></td>
+                            </tr>
+                                <?php
+                            }
+                        }
+                    ?> 
+                </tbody>
+            </table>        
+        </div>
+    </div>
     <?php include 'sideMenuBar.php'; ?>
     <?php include 'footer.html'; ?>
     <!-- bar chart START -->
@@ -217,12 +293,12 @@
             data: {
                 labels: [
                     'In Progress',
-                    'Completed',
-                    'Test'
+                    'Test',
+                    'Completed'                    
                 ],
                 datasets: [{
                     label: 'My First Dataset',
-                    data: [countInProgress, countDone, countTest],
+                    data: [countInProgress, countTest, countDone],
                     backgroundColor: [
                         'rgb(255, 99, 132)',
                         'rgb(54, 162, 235)',
