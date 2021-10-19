@@ -73,7 +73,8 @@
         //no errors
 		if(count($signUpErrorsArr) == 0){
             $password = md5($password); //to calculate MD5 hash of a string for data security
-            $query2 = "INSERT INTO users(user_name, user_email, user_password) VALUES('$name', '$email', '$password')";
+            $query2 = "INSERT INTO users(user_name, user_email, user_password, created_at, updated_at) 
+                        VALUES('$name', '$email', '$password', NOW(), NOW())";
             $runQuery2 = mysqli_query($dbc, $query2);
 
             if($runQuery2){  

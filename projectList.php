@@ -205,7 +205,7 @@
     <div class="container-fluid" style="padding: 30px 10px;">
         <div class="row" style="margin: 0 35px;">
             <div class="col-6">
-                <h3 class="text-info">Projects</h3>
+                <h3 class="text-info">My Projects</h3>
             </div>
             <?php
                 $email = $_SESSION['user_email'];

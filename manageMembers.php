@@ -158,7 +158,7 @@
                             class="fas fa-bars"></i></span> Manage Members</h3>
             </div>
             <div class="col-6 d-flex justify-content-end">
-                <button class="btn btn-info mr-1" type="button" data-toggle="modal" data-target="#addMemberModal">
+                <button class="btn btn-info" type="button" data-toggle="modal" data-target="#addMemberModal">
                     <i class="fa fa-user-plus" style="font-size: 20px;"></i>&nbsp;Invite Member
                 </button>
             </div>
@@ -181,7 +181,7 @@
                             <input type="hidden" name="add_member_projectID" id="add_member_projectID"
                                 value="<?php echo $_GET['id']; ?>">
                             <div class="form-group col-md-12 m-0">
-                                <label for="inputTaskTitle">Email:</label>
+                                <label for="inputMemberEmail">Email:</label>
                                 <input type="email" class="form-control" name="addMemberEmail" id="add_MemberEmail"
                                     aria-describedby="emailHelp" placeholder="Enter email">
                                 <p class="m-0 p-2 text-danger addMemberMsg"></p>

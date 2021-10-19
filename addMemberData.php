@@ -3,10 +3,8 @@
     include 'connectDB.php';
 
     if(isset($_POST['addMemberForm']) && !empty($_POST['addMemberEmail']) && !empty($_POST['projectID'])){
-    
         $memberEmail = $_POST['addMemberEmail'];
-        $projectID = $_POST['projectID'];
-        
+        $projectID = $_POST['projectID']; 
         $currentUser = $_SESSION['user_email'];
     }
 
