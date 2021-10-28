@@ -127,7 +127,7 @@
             <!-- completed tasks START -->
             <div class="card shadow border-success">
                 <div class="card-body">
-                    <h2 class="card-text text-center">Completed</h2>
+                    <h2 class="card-text text-center">Done</h2>
                     <h1 class="card-text text-center text-success"><span class="counter">
                             <?php 
                             $query4 = "SELECT * FROM tasks WHERE task_project='{$_GET['id']}' AND task_status='Done'";
@@ -160,11 +160,11 @@
             <!-- pass value to chart.js END -->
 
             <div class="col-md-7 col-sm-12 shadow p-4 mb-5 mr-md-3 bg-white rounded">
-                <h4 class="text-info">Project Status</h4>
+                <h4 class="text-info">Bar</h4>
                 <canvas id="myChart" width="100" height="55"></canvas>
             </div>
             <div class="col-md-4 col-sm-12 shadow p-4 mb-5 ml-md-3 bg-white rounded">
-                <h4 class="text-info">Task Status</h4>
+                <h4 class="text-info">Pie</h4>
                 <canvas id="myChart2" width="" height=""></canvas>
             </div>
         </div>
@@ -292,17 +292,15 @@
             type: 'pie',
             data: {
                 labels: [
-                    'In Progress',
-                    'Test',
-                    'Completed'                    
+                    'To Do', 'In Progress', 'Test', 'Done'                    
                 ],
                 datasets: [{
-                    label: 'My First Dataset',
-                    data: [countInProgress, countTest, countDone],
+                    data: [countToDo, countInProgress, countTest, countDone],
                     backgroundColor: [
                         'rgb(255, 99, 132)',
                         'rgb(54, 162, 235)',
-                        'rgb(255, 205, 86)'
+                        'rgb(255, 205, 86)',
+                        'rgb(75, 192, 192)'
                     ],
                     hoverOffset: 4
                 }]
